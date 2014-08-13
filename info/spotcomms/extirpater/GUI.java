@@ -19,13 +19,16 @@ import java.util.prefs.Preferences;
 public class GUI extends JFrame implements ActionListener {
 
     private final ArrayList<Checkbox> chkDrives = new ArrayList<Checkbox>();
+    private final JComboBox drpPasses = new JComboBox(new String[]{"1 Pass, 0", "2 Passes, 0/1", "3 Passes, 0/1/R"});
     private final Checkbox chkEmptyRecycleBins = new Checkbox("Empty Recycle Bins");
     private final JButton btnStart = new JButton("Extirpate!");
     private final JLabel lblStatus = new JLabel("Waiting", JLabel.CENTER);
 
+    private boolean isRunning = false;
     private boolean isAdmin = false;
     private int amtDrives = 0;
     private int amtDrivesSelected = 0;
+    private int passes = 1;
     private Double[] driveStatus = new Double[1337];
 
     public GUI() {
@@ -34,11 +37,12 @@ public class GUI extends JFrame implements ActionListener {
         add(panel);
         isAdmin = isAdmin();
         amtDrives = getDrives(false).size();
-        panel.setLayout(new GridLayout(amtDrives + 3, 1));
+        panel.setLayout(new GridLayout(amtDrives + 4, 1));
         for(int x = 0; x < amtDrives; x++) {
             chkDrives.add(new Checkbox(getDrives(true).get(x)));
             panel.add(chkDrives.get(x));
         }
+        panel.add(drpPasses); drpPasses.addActionListener(this);
         panel.add(chkEmptyRecycleBins); chkEmptyRecycleBins.setEnabled(isAdmin); if(!isAdmin) chkEmptyRecycleBins.setLabel(chkEmptyRecycleBins.getLabel() + " (admin only)");
         panel.add(btnStart); btnStart.addActionListener(this);
         panel.add(lblStatus);
@@ -46,23 +50,31 @@ public class GUI extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == drpPasses) {
+            passes = drpPasses.getSelectedIndex() + 1;
+        }
         if (e.getSource() == btnStart) {
-            for(Checkbox c : chkDrives) {
-                if(c.getState()) {
-                    amtDrivesSelected++;
-                    if(chkEmptyRecycleBins.getState()) {
-                        emptyRecycleBin(new File(c.getLabel().substring(0, 3))).start();
-                        System.out.println("Emptied Recycle Bin of drive " + c.getLabel().substring(0, 3));
+            if(!isRunning) {
+                isRunning = true;
+                btnStart.setText("Halt!");
+                amtDrivesSelected = 0;
+                driveStatus = new Double[1337];
+                for (Checkbox c : chkDrives) {
+                    if (c.getState()) {
+                        amtDrivesSelected++;
+                        if (chkEmptyRecycleBins.getState()) {
+                            emptyRecycleBin(new File(c.getLabel().substring(0, 3))).start();
+                        }
+                        wipeDriveFreeSpace(new File(c.getLabel().substring(0, 3))).start();
                     }
-                    wipeDriveFreeSpace(new File(c.getLabel().substring(0, 3))).start();
-                    System.out.println("Started wiping free space of drive " + c.getLabel().substring(0, 3));
+                    c.setEnabled(false);
                 }
+                updateStatus().start();
+            } else {
+                isRunning = false;
+                btnStart.setText("Halting...");
+                btnStart.setEnabled(false);
             }
-            updateStatus().start();
-            for(Checkbox c: chkDrives) {
-                c.setEnabled(false);
-            }
-            btnStart.setEnabled(false);
         }
     }
 
@@ -114,8 +126,7 @@ public class GUI extends JFrame implements ActionListener {
             @Override
             public void run() {
                 try {
-                    Runtime rt = Runtime.getRuntime();
-                    Process p = rt.exec("cmd.exe @cmd /C \"cipher /W:" + drive + " \"");
+                    Process p = new ProcessBuilder("cipher", "/W:" + drive).start();
                     Scanner s = new Scanner(p.getInputStream());
                     int driveNumber = 1337;
                     for(int x = 0; x < amtDrives; x++) {
@@ -124,13 +135,25 @@ public class GUI extends JFrame implements ActionListener {
                         }
                     }
                     int x = 0;
-                    while(s.hasNext()) {
-                        if(s.next().contains("Writing")) {
-                            x++;
-                            driveStatus[driveNumber] = (x*25.0);
-                        }
+                    try {
+                        while(s.hasNext()) {
+                            if (!isRunning) {
+                                s.close();
+                                p.destroy();
+                            } else if (s.next().contains("Writing")) {
+                                x++;
+                                if (x - 1 == passes){
+                                    s.close();
+                                    p.destroy();
+                                }
+                                driveStatus[driveNumber] = (x * 25.0);
+                            }
+                         }
+                    } catch(Exception e) {
                     }
                     driveStatus[driveNumber] = 100.0;
+                    Thread.sleep(500);
+                    Runtime rt = Runtime.getRuntime();
                     rt.exec("cmd.exe @cmd /C \"rmdir /S /Q " + drive + "EFSTMPWP\"");
                 } catch(Exception e) {
                     e.printStackTrace();
@@ -154,10 +177,18 @@ public class GUI extends JFrame implements ActionListener {
                         }
                         percentage /= amtDrivesSelected;
                         percentage = Math.round(percentage * 100.0) / 100.0;
+                        if(amtDrivesSelected == 0)
+                            percentage = 100.0;
                         lblStatus.setText("Running, " + percentage + "%");
                         Thread.sleep(500);
                     }
-                    lblStatus.setText("Finished");
+                    lblStatus.setText("Waiting");
+                    isRunning = false;
+                    btnStart.setEnabled(true);
+                    btnStart.setText("Extirpate!");
+                    for (Checkbox c : chkDrives) {
+                        c.setEnabled(true);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
