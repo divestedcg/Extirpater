@@ -5,6 +5,7 @@ Requirements
 ------------
 - Java 8.0
 - Windows 2000 and higher, including server versions
+- 70MB of RAM, +1MB for each drive
 
 Instructions
 ------------
