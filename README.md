@@ -19,6 +19,7 @@ Instructions
 Notes
 -----
 - Halting whilst running, may take some time and in some instances it is quicker to close the program and start over
+- The percentage complete isn't entirely accurate
 
 Reasoning for Creation
 ----------------------
