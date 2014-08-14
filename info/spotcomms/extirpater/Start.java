@@ -21,11 +21,6 @@ public class Start {
             SwingUtilities.updateComponentTreeUI(window);
         }
         GUI g = new GUI();
-        int amtDrives = g.getDrives(false).size();
-        g.setSize(230, 80 + (amtDrives * 30));
-        g.setLocation(2, 2);
-        g.setTitle("Extirpater");
-        g.setVisible(true);
     }
 
 }
