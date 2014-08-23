@@ -27,6 +27,7 @@ There are many programs that have the ability to erase free space, but everyone 
 
 Credits
 -------
+- launch4j
 - JTattoo
 - Microsoft
 - http://stackoverflow.com/a/23538961
