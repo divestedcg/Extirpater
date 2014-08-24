@@ -20,7 +20,7 @@ public class GUI extends JFrame implements ActionListener {
     private boolean isAdmin;
     private ArrayList<Drive> drives = new ArrayList<Drive>();
     private int amtDrives = 0;
-    private final JComboBox drpPasses = new JComboBox(new String[]{"1 Pass, 0", "2 Passes, 0/1", "3 Passes, 0/1/R"});
+    private final JComboBox drpPasses = new JComboBox(new String[] {"1 Pass, 0", "2 Passes, 0/1", "3 Passes, 0/1/R"});
     private int passes = 1;
     private final Checkbox chkEmptyRecycleBins = new Checkbox("Empty Recycle Bins");
     private final JButton btnStart = new JButton("Extirpate!");
@@ -32,14 +32,26 @@ public class GUI extends JFrame implements ActionListener {
         isAdmin = isAdmin();
         initDrives();
         amtDrives = drives.size();
-        setSize(230, 80 + (amtDrives * 30)); setLocation(2, 2); setTitle("Extirpater"); setVisible(true); setDefaultCloseOperation(EXIT_ON_CLOSE);
-        JPanel panel = new JPanel(); panel.setLayout(new GridLayout(amtDrives + 4, 1)); add(panel);
-        for(Drive drive : drives) {
+        setSize(230, 80 + (amtDrives * 30));
+        setLocation(2, 2);
+        setTitle("Extirpater");
+        setVisible(true);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(amtDrives + 4, 1));
+        add(panel);
+        for (Drive drive : drives) {
             panel.add(drive.getCheckbox());
         }
-        panel.add(drpPasses); drpPasses.addActionListener(this);
-        panel.add(chkEmptyRecycleBins); chkEmptyRecycleBins.setEnabled(isAdmin); if(!isAdmin) chkEmptyRecycleBins.setLabel("Empty Recycle Bins (admin only)");
-        panel.add(btnStart); btnStart.addActionListener(this);
+        panel.add(drpPasses);
+        drpPasses.addActionListener(this);
+        panel.add(chkEmptyRecycleBins);
+        chkEmptyRecycleBins.setEnabled(isAdmin);
+        if (!isAdmin) {
+            chkEmptyRecycleBins.setLabel("Empty Recycle Bins (admin only)");
+        }
+        panel.add(btnStart);
+        btnStart.addActionListener(this);
         panel.add(lblStatus);
     }
 
@@ -48,14 +60,14 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     //Credits: http://stackoverflow.com/a/23538961
-    private boolean isAdmin(){
+    private boolean isAdmin() {
         Preferences prefs = Preferences.systemRoot();
-        try{
+        try {
             prefs.put("extirpater", "swag"); //SecurityException on Windows
             prefs.remove("extirpater");
             prefs.flush(); //BackingStoreException on Linux
             return true;
-        }catch(Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
@@ -63,9 +75,9 @@ public class GUI extends JFrame implements ActionListener {
     //Credits: http://stackoverflow.com/a/15608620
     private void initDrives() {
         FileSystemView fsv = FileSystemView.getFileSystemView();
-        for(File drivePath : File.listRoots()) {
+        for (File drivePath : File.listRoots()) {
             String driveType = fsv.getSystemTypeDescription(drivePath);
-            if(driveType.equals("Local Disk") || driveType.equals("Removable Disk")) {
+            if (driveType.equals("Local Disk") || driveType.equals("Removable Disk")) {
                 String displayName = fsv.getSystemDisplayName(drivePath);
                 drives.add(new Drive(this, drivePath, displayName.substring(0, displayName.length() - 4)));
             }
@@ -73,11 +85,11 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == drpPasses) {
+        if (e.getSource() == drpPasses) {
             passes = drpPasses.getSelectedIndex() + 1;
         }
-        if(e.getSource() == btnStart) {
-            if(isRunning()) {
+        if (e.getSource() == btnStart) {
+            if (isRunning()) {
                 isRunning = false;
                 btnStart.setText("Halting...");
                 btnStart.setEnabled(false);
@@ -85,14 +97,15 @@ public class GUI extends JFrame implements ActionListener {
                 isRunning = true;
                 btnStart.setText("Halt!");
                 amtDrivesSelected = 0;
-                for(int x = 0; x < drives.size(); x++) {
+                for (int x = 0; x < drives.size(); x++) {
                     Drive drive = drives.get(x);
                     drive.setDriveStatus(0);
                     drive.getCheckbox().setEnabled(false);
-                    if(drive.getCheckbox().getState()) {
+                    if (drive.getCheckbox().getState()) {
                         amtDrivesSelected++;
-                        if(chkEmptyRecycleBins.getState())
+                        if (chkEmptyRecycleBins.getState()) {
                             drive.emptyDriveRecycleBin().start();
+                        }
                         drive.wipeDriveFreeSpace(passes).start();
                     }
                 }
@@ -106,8 +119,9 @@ public class GUI extends JFrame implements ActionListener {
             try {
                 lblStatus.setText("Running");
                 double percentage = 0.0;
-                if (amtDrivesSelected == 0)
+                if (amtDrivesSelected == 0) {
                     percentage = 100.0;
+                }
                 while (percentage < 100.0) {
                     percentage = 0;
                     for (int x = 0; x < drives.size(); x++) {
@@ -125,7 +139,7 @@ public class GUI extends JFrame implements ActionListener {
                 for (int x = 0; x < drives.size(); x++) {
                     drives.get(x).getCheckbox().setEnabled(true);
                 }
-            } catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
