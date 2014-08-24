@@ -20,7 +20,8 @@ public class GUI extends JFrame implements ActionListener {
     private boolean isAdmin;
     private ArrayList<Drive> drives = new ArrayList<Drive>();
     private int amtDrives = 0;
-    private final JComboBox drpPasses = new JComboBox(new String[] {"1 Pass, 0", "2 Passes, 0/1", "3 Passes, 0/1/R"});
+    private final JComboBox drpPasses =
+        new JComboBox(new String[] {"1 Pass, 0", "2 Passes, 0/1", "3 Passes, 0/1/R"});
     private int passes = 1;
     private final Checkbox chkEmptyRecycleBins = new Checkbox("Empty Recycle Bins");
     private final JButton btnStart = new JButton("Extirpate!");
@@ -79,7 +80,8 @@ public class GUI extends JFrame implements ActionListener {
             String driveType = fsv.getSystemTypeDescription(drivePath);
             if (driveType.equals("Local Disk") || driveType.equals("Removable Disk")) {
                 String displayName = fsv.getSystemDisplayName(drivePath);
-                drives.add(new Drive(this, drivePath, displayName.substring(0, displayName.length() - 4)));
+                drives.add(
+                    new Drive(this, drivePath, displayName.substring(0, displayName.length() - 4)));
             }
         }
     }
