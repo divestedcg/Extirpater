@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.prefs.Preferences;
 
 /**
@@ -103,34 +102,31 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     private Thread updateStatus() {
-        return new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    lblStatus.setText("Running");
-                    double percentage = 0.0;
-                    if (amtDrivesSelected == 0)
-                        percentage = 100.0;
-                    while (percentage < 100.0) {
-                        percentage = 0;
-                        for (int x = 0; x < drives.size(); x++) {
-                            percentage += drives.get(x).getDriveStatus();
-                        }
-                        percentage /= amtDrivesSelected;
-                        percentage = Math.round(percentage * 100.0) / 100.0;
-                        lblStatus.setText("Running, " + percentage + "%");
-                        Thread.sleep(500);
-                    }
-                    lblStatus.setText("Waiting");
-                    isRunning = false;
-                    btnStart.setEnabled(true);
-                    btnStart.setText("Extirpate!");
+        return new Thread(() -> {
+            try {
+                lblStatus.setText("Running");
+                double percentage = 0.0;
+                if (amtDrivesSelected == 0)
+                    percentage = 100.0;
+                while (percentage < 100.0) {
+                    percentage = 0;
                     for (int x = 0; x < drives.size(); x++) {
-                        drives.get(x).getCheckbox().setEnabled(true);
+                        percentage += drives.get(x).getDriveStatus();
                     }
-                } catch(Exception e) {
-                    e.printStackTrace();
+                    percentage /= amtDrivesSelected;
+                    percentage = Math.round(percentage * 100.0) / 100.0;
+                    lblStatus.setText("Running, " + percentage + "%");
+                    Thread.sleep(500);
                 }
+                lblStatus.setText("Waiting");
+                isRunning = false;
+                btnStart.setEnabled(true);
+                btnStart.setText("Extirpate!");
+                for (int x = 0; x < drives.size(); x++) {
+                    drives.get(x).getCheckbox().setEnabled(true);
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
             }
         });
     }
