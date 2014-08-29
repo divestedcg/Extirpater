@@ -12,9 +12,10 @@ Instructions
 1. Launch the program
 2. Select the drives you want to erase the free space on
 3. Select the amount of passes you want, the more passes the more through
-4. Click "Extirpate!"
-5. Wait a few hours, larger drives take longer
-6. The status of the process will be shown on the bottom of the window
+4. Select any additional options
+5. Click "Extirpate!"
+6. Wait a few hours, larger drives take longer
+7. The status of the process will be shown on the bottom of the window
 
 Notes
 -----

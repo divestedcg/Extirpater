@@ -54,10 +54,6 @@ public class Drive {
                     for (int x = 0; x < 100000; x++) {
                         File f = new File(drivePath + "Extirpater_Temp-" + getRandomString(238));
                         f.createNewFile();
-                        //f.delete();
-                        if (x % 1000 == 0) {
-                            System.out.println(x);
-                        }
                     }
                 }
                 Process p = new ProcessBuilder("cipher", "/W:" + drivePath).start();
@@ -81,14 +77,12 @@ public class Drive {
                     //e.printStackTrace();
                     //Upon halting this will throw an error due to the scanner closing and the while loop still running
                 }
+                new ProcessBuilder("cmd.exe", "@cmd /c \"rmdir /S /Q " + drivePath + "EFSTMPWP\"")
+                    .start();
                 if (fillUpFileTable) {
                     for (int x = 0; x < 100000; x++) {
                         File f = new File(drivePath + "Extirpater_Temp-" + getRandomString(238));
                         f.createNewFile();
-                        //f.delete();
-                        if (x % 1000 == 0) {
-                            System.out.println(x);
-                        }
                     }
                 }
                 File[] allRootFiles = drivePath.listFiles();
@@ -102,8 +96,6 @@ public class Drive {
                 }
                 driveStatus = 100.0;
                 Thread.sleep(500);
-                new ProcessBuilder("cmd.exe", "@cmd /c \"rmdir /S /Q " + drivePath + "EFSTMPWP\"")
-                    .start();
             } catch (Exception e) {
                 e.printStackTrace();
             }
