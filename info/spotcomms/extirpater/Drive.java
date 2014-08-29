@@ -38,10 +38,11 @@ public class Drive {
         this.driveStatus = driveStatus;
     }
 
-    public Thread wipeDriveFreeSpace(final boolean emptyTrash, final boolean fillUpFileTable, final int passes) {
+    public Thread wipeDriveFreeSpace(final boolean emptyTrash, final boolean fillUpFileTable,
+        final int passes) {
         return new Thread(() -> {
             try {
-                if(emptyTrash) {
+                if (emptyTrash) {
                     Runtime rt = Runtime.getRuntime();
                     if (drivePath.equals(new File("C:\""))) {
                         new ProcessBuilder("rmdir", "/S /Q " + drivePath + "$Recycle.Bin").start();
@@ -49,11 +50,14 @@ public class Drive {
                         new ProcessBuilder("rmdir", "/S /Q " + drivePath + "$RECYCLE.BIN").start();
                     }
                 }
-                if(fillUpFileTable) {
+                if (fillUpFileTable) {
                     for (int x = 0; x < 100000; x++) {
-                        File f = new File(drivePath + "Extirpater_Temp-" + getRandomString(10));
+                        File f = new File(drivePath + "Extirpater_Temp-" + getRandomString(238));
                         f.createNewFile();
-                        f.delete();
+                        //f.delete();
+                        if (x % 1000 == 0) {
+                            System.out.println(x);
+                        }
                     }
                 }
                 Process p = new ProcessBuilder("cipher", "/W:" + drivePath).start();
@@ -76,6 +80,25 @@ public class Drive {
                 } catch (Exception e) {
                     //e.printStackTrace();
                     //Upon halting this will throw an error due to the scanner closing and the while loop still running
+                }
+                if (fillUpFileTable) {
+                    for (int x = 0; x < 100000; x++) {
+                        File f = new File(drivePath + "Extirpater_Temp-" + getRandomString(238));
+                        f.createNewFile();
+                        //f.delete();
+                        if (x % 1000 == 0) {
+                            System.out.println(x);
+                        }
+                    }
+                }
+                File[] allRootFiles = drivePath.listFiles();
+                for (File f : allRootFiles) {
+                    if (f.isFile()) {
+                        if ((f + "").substring(3, (f + "").length())
+                            .startsWith("Extirpater_Temp-")) {
+                            f.delete();
+                        }
+                    }
                 }
                 driveStatus = 100.0;
                 Thread.sleep(500);

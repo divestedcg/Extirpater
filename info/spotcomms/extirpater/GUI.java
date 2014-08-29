@@ -109,7 +109,8 @@ public class GUI extends JFrame implements ActionListener {
                     drive.getCheckbox().setEnabled(false);
                     if (drive.getCheckbox().getState()) {
                         amtDrivesSelected++;
-                        drive.wipeDriveFreeSpace(chkEmptyRecycleBins.getState(), chkFillFileTable.getState(), passes).start();
+                        drive.wipeDriveFreeSpace(chkEmptyRecycleBins.getState(),
+                            chkFillFileTable.getState(), passes).start();
                     }
                 }
                 updateStatus().start();
