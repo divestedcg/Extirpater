@@ -24,6 +24,7 @@ public class GUI extends JFrame implements ActionListener {
         new JComboBox(new String[] {"1 Pass, 0", "2 Passes, 0/1", "3 Passes, 0/1/R"});
     private int passes = 1;
     private final Checkbox chkEmptyRecycleBins = new Checkbox("Empty Recycle Bins");
+    private final Checkbox chkFillFileTable = new Checkbox("Fill File Table");
     private final JButton btnStart = new JButton("Extirpate!");
     private boolean isRunning = false;
     private int amtDrivesSelected = 0;
@@ -39,7 +40,7 @@ public class GUI extends JFrame implements ActionListener {
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(amtDrives + 4, 1));
+        panel.setLayout(new GridLayout(amtDrives + 5, 1));
         add(panel);
         for (Drive drive : drives) {
             panel.add(drive.getCheckbox());
@@ -51,6 +52,7 @@ public class GUI extends JFrame implements ActionListener {
         if (!isAdmin) {
             chkEmptyRecycleBins.setLabel("Empty Recycle Bins (admin only)");
         }
+        panel.add(chkFillFileTable);
         panel.add(btnStart);
         btnStart.addActionListener(this);
         panel.add(lblStatus);
@@ -99,16 +101,15 @@ public class GUI extends JFrame implements ActionListener {
                 isRunning = true;
                 btnStart.setText("Halt!");
                 amtDrivesSelected = 0;
+                chkEmptyRecycleBins.setEnabled(false);
+                chkFillFileTable.setEnabled(false);
                 for (int x = 0; x < drives.size(); x++) {
                     Drive drive = drives.get(x);
                     drive.setDriveStatus(0);
                     drive.getCheckbox().setEnabled(false);
                     if (drive.getCheckbox().getState()) {
                         amtDrivesSelected++;
-                        if (chkEmptyRecycleBins.getState()) {
-                            drive.emptyDriveRecycleBin().start();
-                        }
-                        drive.wipeDriveFreeSpace(passes).start();
+                        drive.wipeDriveFreeSpace(chkEmptyRecycleBins.getState(), chkFillFileTable.getState(), passes).start();
                     }
                 }
                 updateStatus().start();
@@ -136,6 +137,8 @@ public class GUI extends JFrame implements ActionListener {
                 }
                 lblStatus.setText("Waiting");
                 isRunning = false;
+                chkEmptyRecycleBins.setEnabled(isAdmin);
+                chkFillFileTable.setEnabled(true);
                 btnStart.setEnabled(true);
                 btnStart.setText("Extirpate!");
                 for (int x = 0; x < drives.size(); x++) {
