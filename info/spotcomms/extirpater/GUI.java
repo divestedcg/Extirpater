@@ -3,10 +3,10 @@ package info.spotcomms.extirpater;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Scanner;
 import java.util.prefs.Preferences;
 
 /**
@@ -15,57 +15,50 @@ import java.util.prefs.Preferences;
  * Date: 8/12/2014
  * Time: 2:24 AM
  */
-public class GUI extends JFrame implements ActionListener {
+public class GUI extends JFrame {
 
-    private boolean isAdmin;
+    public boolean isAdmin;
+    public String os;
     private ArrayList<Drive> drives = new ArrayList<Drive>();
     private int amtDrives = 0;
-    private final JComboBox drpPasses =
-        new JComboBox(new String[] {"1 Pass, 0", "2 Passes, 0/1", "3 Passes, 0/1/R"});
-    private int passes = 1;
-    private final Checkbox chkEmptyRecycleBins = new Checkbox("Empty Recycle Bins");
-    private final Checkbox chkFillFileTable = new Checkbox("Fill File Table");
-    private final JButton btnStart = new JButton("Extirpate!");
-    private boolean isRunning = false;
-    private int amtDrivesSelected = 0;
-    private final JLabel lblStatus = new JLabel("Waiting", JLabel.CENTER);
+    public JComboBox drpPasses = new JComboBox(new String[]{"1 Pass, 0", "2 Passes, 0/1", "3 Passes, 0/1/Random"});
+    public Checkbox chkEmptyTrash = new Checkbox("Empty Trash", true);
+    public JComboBox drpFillFileTable = new JComboBox(new String[]{"Don't Fill File Table", "Fill File Table, 20,000 Files", "Fill File Table, 200,000 Files", "Fill File Table, 2,000,000 Files", "Fill File Table, 2,000,000,000 Files"});
 
     public GUI() {
-        isAdmin = isAdmin();
-        initDrives();
-        amtDrives = drives.size();
-        setSize(230, 80 + (amtDrives * 30));
-        setLocation(2, 2);
-        setTitle("Extirpater");
-        setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(amtDrives + 5, 1));
-        add(panel);
-        for (Drive drive : drives) {
-            panel.add(drive.getCheckbox());
+        try {
+            isAdmin = isAdmin();
+            os = getOS();
+            initDrives();
+            amtDrives = drives.size();
+            setTitle("Extirpater");
+            setLocation(50, 50);
+            setSize(800, (amtDrives * 30) + 20);
+            JPanel panel = new JPanel();
+            panel.setLayout(new GridLayout(amtDrives + 1, 3));
+            setDefaultCloseOperation(EXIT_ON_CLOSE);
+            setVisible(true);
+            add(panel);
+            for (Drive drive : drives) {
+                panel.add(drive.getLblDriveName());
+                panel.add(drive.getBtnControl());
+                panel.add(drive.getLblStatus());
+            }
+            panel.add(drpPasses);
+            panel.add(chkEmptyTrash);
+            chkEmptyTrash.setEnabled(isAdmin);
+            if (!isAdmin)
+                chkEmptyTrash.setLabel("Empty Trash (admin only)");
+            panel.add(drpFillFileTable);
+        } catch (Exception e) {
+            //e.printStackTrace();
         }
-        panel.add(drpPasses);
-        drpPasses.addActionListener(this);
-        panel.add(chkEmptyRecycleBins);
-        chkEmptyRecycleBins.setEnabled(isAdmin);
-        if (!isAdmin) {
-            chkEmptyRecycleBins.setLabel("Empty Recycle Bins (admin only)");
-        }
-        panel.add(chkFillFileTable);
-        panel.add(btnStart);
-        btnStart.addActionListener(this);
-        panel.add(lblStatus);
-    }
-
-    public boolean isRunning() {
-        return this.isRunning;
     }
 
     //Credits: http://stackoverflow.com/a/23538961
     private boolean isAdmin() {
-        Preferences prefs = Preferences.systemRoot();
         try {
+            Preferences prefs = Preferences.systemRoot();
             prefs.put("extirpater", "swag"); //SecurityException on Windows
             prefs.remove("extirpater");
             prefs.flush(); //BackingStoreException on Linux
@@ -75,80 +68,68 @@ public class GUI extends JFrame implements ActionListener {
         }
     }
 
-    //Credits: http://stackoverflow.com/a/15608620
+    private String getOS() {
+        try {
+            String os = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
+            if (os.startsWith("win"))
+                return "Windows";
+            if (os.startsWith("mac"))
+                return "Mac OS";
+            if (os.contains("linux"))
+                return "Linux";
+        } catch (Exception e) {
+            //e.printStackTrace();
+        }
+        return "Unknown";
+    }
+
     private void initDrives() {
-        FileSystemView fsv = FileSystemView.getFileSystemView();
-        for (File drivePath : File.listRoots()) {
-            String driveType = fsv.getSystemTypeDescription(drivePath);
-            if (driveType.equals("Local Disk") || driveType.equals("Removable Disk")) {
-                String displayName = fsv.getSystemDisplayName(drivePath);
-                drives.add(
-                    new Drive(this, drivePath, displayName.substring(0, displayName.length() - 4)));
-            }
-        }
-    }
-
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == drpPasses) {
-            passes = drpPasses.getSelectedIndex() + 1;
-        }
-        if (e.getSource() == btnStart) {
-            if (isRunning()) {
-                isRunning = false;
-                btnStart.setText("Halting...");
-                btnStart.setEnabled(false);
-            } else {
-                isRunning = true;
-                btnStart.setText("Halt!");
-                amtDrivesSelected = 0;
-                chkEmptyRecycleBins.setEnabled(false);
-                chkFillFileTable.setEnabled(false);
-                for (int x = 0; x < drives.size(); x++) {
-                    Drive drive = drives.get(x);
-                    drive.setDriveStatus(0);
-                    drive.getCheckbox().setEnabled(false);
-                    if (drive.getCheckbox().getState()) {
-                        amtDrivesSelected++;
-                        drive.wipeDriveFreeSpace(chkEmptyRecycleBins.getState(),
-                            chkFillFileTable.getState(), passes).start();
+        try {
+            //Credits: http://stackoverflow.com/a/15608620
+            if (os.equals("Windows")) {
+                FileSystemView fsv = FileSystemView.getFileSystemView();
+                for (File drivePath : File.listRoots()) {
+                    String driveType = fsv.getSystemTypeDescription(drivePath);
+                    if (driveType.equals("Local Disk") || driveType.equals("Removable Disk")) {
+                        String displayName = fsv.getSystemDisplayName(drivePath).substring(0, fsv.getSystemDisplayName(drivePath).length() - 4);
+                        drives.add(new Drive(this, drivePath, displayName));
                     }
                 }
-                updateStatus().start();
             }
-        }
-    }
-
-    private Thread updateStatus() {
-        return new Thread(() -> {
-            try {
-                lblStatus.setText("Running");
-                double percentage = 0.0;
-                if (amtDrivesSelected == 0) {
-                    percentage = 100.0;
-                }
-                while (percentage < 100.0) {
-                    percentage = 0;
-                    for (int x = 0; x < drives.size(); x++) {
-                        percentage += drives.get(x).getDriveStatus();
+            if (os.equals("Mac OS")) {
+                File[] volumes = new File("/Volumes").listFiles();
+                for (File drivePath : volumes) {
+                    if (drivePath.isDirectory()) {
+                        String displayName = (drivePath + "").substring(9, (drivePath + "").length());
+                        drives.add(new Drive(this, drivePath, displayName));
                     }
-                    percentage /= amtDrivesSelected;
-                    percentage = Math.round(percentage * 100.0) / 100.0;
-                    lblStatus.setText("Running, " + percentage + "%");
-                    Thread.sleep(500);
                 }
-                lblStatus.setText("Waiting");
-                isRunning = false;
-                chkEmptyRecycleBins.setEnabled(isAdmin);
-                chkFillFileTable.setEnabled(true);
-                btnStart.setEnabled(true);
-                btnStart.setText("Extirpate!");
-                for (int x = 0; x < drives.size(); x++) {
-                    drives.get(x).getCheckbox().setEnabled(true);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-        });
+            //Credits: Joe aka Dr_fantasmo
+            if (os.equals("Linux")) {
+                Process getDrives = new ProcessBuilder("mount", "-l").start();
+                Scanner s = new Scanner(getDrives.getInputStream());
+                ArrayList<String> drivesTemp = new ArrayList<String>();
+                while (s.hasNextLine()) {
+                    String drive = s.nextLine();
+                    if (drive.startsWith("/dev/sd")) {
+                        drivesTemp.add(drive);
+                    }
+                }
+                s.close();
+                for (String drive : drivesTemp) {
+                    String[] driveS = drive.split(" ");
+                    File drivePath = new File(driveS[2]);
+                    String displayName = "";
+                    if (drive.contains("[") && drive.contains("]")) {
+                        displayName = drive.substring(drive.indexOf("[") + 1, drive.lastIndexOf("]"));
+                    }
+                    drives.add(new Drive(this, drivePath, displayName));
+                }
+            }
+        } catch (Exception e) {
+            //e.printStackTrace();
+        }
     }
 
 }
