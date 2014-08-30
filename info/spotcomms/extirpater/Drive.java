@@ -36,10 +36,11 @@ public class Drive implements ActionListener {
         this.drivePath = drivePath;
         this.extirpaterPath = new File(this.drivePath + "/Extirpater");
         this.driveName = driveName;
-        if (this.driveName.equals(""))
+        if (this.driveName.equals("")) {
             this.lblDriveName = new JLabel(this.drivePath + "", JLabel.CENTER);
-        else
+        } else {
             this.lblDriveName = new JLabel(this.driveName, JLabel.CENTER);
+        }
         this.btnControl = new JButton("Start");
         this.btnControl.addActionListener(this);
         this.lblStatus = new JLabel("Idle", JLabel.CENTER);
@@ -94,11 +95,13 @@ public class Drive implements ActionListener {
                                 }
                             }
                             boolean emptyTrash = false;
-                            if (!gui.isAdmin)
+                            if (!gui.isAdmin) {
                                 emptyTrash = false;
-                            else
+                            } else {
                                 emptyTrash = gui.chkEmptyTrash.getState();
-                            Thread mainThread = start(emptyTrash, fillFileTable, amtFillFileTable, gui.drpPasses.getSelectedIndex() + 1);
+                            }
+                            Thread mainThread = start(emptyTrash, fillFileTable, amtFillFileTable,
+                                gui.drpPasses.getSelectedIndex() + 1);
                             mainThread.start();
                             while (running) {
                                 //Do nothing
@@ -121,7 +124,8 @@ public class Drive implements ActionListener {
         }
     }
 
-    public Thread start(final boolean emptyTrash, final boolean fillFileTable, final int amtFillFileTable, final int passes) {
+    public Thread start(final boolean emptyTrash, final boolean fillFileTable,
+        final int amtFillFileTable, final int passes) {
         return new Thread(new Runnable() {
             @Override
             public void run() {
@@ -206,8 +210,9 @@ public class Drive implements ActionListener {
             for (int x = 0; x < amtFiles; x++) {
                 File f = new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(229));
                 f.createNewFile();
-                if (x % 1000 == 0)
+                if (x % 1000 == 0) {
                     lblStatus.setText("Filling File Table, Pass " + pass + " of 2, File: " + x);
+                }
             }
             lblStatus.setText("Filled File Table");
             Thread.sleep(5000);
@@ -223,19 +228,22 @@ public class Drive implements ActionListener {
 
     private void eraseFreeSpace(byte value, int pass) {
         try {
-            if (value == 0x42)
+            if (value == 0x42) {
                 lblStatus.setText("Erasing Free Space, Pass: " + pass + ", Value: Random");
-            else
+            } else {
                 lblStatus.setText("Erasing Free Space, Pass: " + pass + ", Value: " + value);
+            }
             try {
                 while ((drivePath.getFreeSpace() / megabyte) >= 100) {
-                    File file = new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(229));
+                    File file =
+                        new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(229));
                     file.createNewFile();
                     FileOutputStream fileOutputStream = new FileOutputStream(file);
-                    if (value == 0x42)
+                    if (value == 0x42) {
                         fileOutputStream.write(getRandomByteArray(megabyte));
-                    else
+                    } else {
                         fileOutputStream.write(getByteArray(value, megabyte));
+                    }
                     fileOutputStream.flush();
                     fileOutputStream.close();
                 }
@@ -244,13 +252,15 @@ public class Drive implements ActionListener {
             }
             try {
                 while ((drivePath.getFreeSpace() / kilobyte) >= 1) {
-                    File file = new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(229));
+                    File file =
+                        new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(229));
                     file.createNewFile();
                     FileOutputStream fileOutputStream = new FileOutputStream(file);
-                    if (value == 0x42)
+                    if (value == 0x42) {
                         fileOutputStream.write(getRandomByteArray(kilobyte));
-                    else
+                    } else {
                         fileOutputStream.write(getByteArray(value, kilobyte));
+                    }
                     fileOutputStream.flush();
                     fileOutputStream.close();
                 }
@@ -259,13 +269,15 @@ public class Drive implements ActionListener {
             }
             try {
                 while ((drivePath.getFreeSpace() / bite) >= 1) {
-                    File file = new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(229));
+                    File file =
+                        new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(229));
                     file.createNewFile();
                     FileOutputStream fileOutputStream = new FileOutputStream(file);
-                    if (value == 0x42)
+                    if (value == 0x42) {
                         fileOutputStream.write(getRandomByteArray(bite));
-                    else
+                    } else {
                         fileOutputStream.write(getByteArray(value, bite));
+                    }
                     fileOutputStream.flush();
                     fileOutputStream.close();
                 }
@@ -314,7 +326,7 @@ public class Drive implements ActionListener {
         String temp = "";
         for (int i = 0; i < length; i++) {
             int rn = new Random(System.currentTimeMillis() - Math
-                    .round((Math.random() * 1000 * Math.random()) / Math.PI)).nextInt(base.length());
+                .round((Math.random() * 1000 * Math.random()) / Math.PI)).nextInt(base.length());
             temp = temp + base.substring(rn, rn + 1);
         }
         return temp;
@@ -342,8 +354,9 @@ public class Drive implements ActionListener {
                 if (f.isDirectory()) {
                     deleteDirectory(f);
                     f.delete();
-                } else
+                } else {
                     f.delete();
+                }
             }
         } catch (Exception e) {
             //e.printStackTrace();

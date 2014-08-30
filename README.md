@@ -29,7 +29,7 @@ Reasons for Creation || Issues with Similar Programs
 ----------------------------------------------------
 - Erasing multiple drives at once
 - Speed
-- Multiplatform Support
+- Multiplatform support
 
 Credits
 -------

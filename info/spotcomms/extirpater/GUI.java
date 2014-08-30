@@ -21,9 +21,13 @@ public class GUI extends JFrame {
     public String os;
     private ArrayList<Drive> drives = new ArrayList<Drive>();
     private int amtDrives = 0;
-    public JComboBox drpPasses = new JComboBox(new String[]{"1 Pass, 0", "2 Passes, 0/1", "3 Passes, 0/1/Random"});
+    public JComboBox drpPasses =
+        new JComboBox(new String[] {"1 Pass, 0", "2 Passes, 0/1", "3 Passes, 0/1/Random"});
     public Checkbox chkEmptyTrash = new Checkbox("Empty Trash", true);
-    public JComboBox drpFillFileTable = new JComboBox(new String[]{"Don't Fill File Table", "Fill File Table, 20,000 Files", "Fill File Table, 200,000 Files", "Fill File Table, 2,000,000 Files", "Fill File Table, 2,000,000,000 Files"});
+    public JComboBox drpFillFileTable = new JComboBox(
+        new String[] {"Don't Fill File Table", "Fill File Table, 20,000 Files",
+            "Fill File Table, 200,000 Files", "Fill File Table, 2,000,000 Files",
+            "Fill File Table, 2,000,000,000 Files"});
 
     public GUI() {
         try {
@@ -47,8 +51,9 @@ public class GUI extends JFrame {
             panel.add(drpPasses);
             panel.add(chkEmptyTrash);
             chkEmptyTrash.setEnabled(isAdmin);
-            if (!isAdmin)
+            if (!isAdmin) {
                 chkEmptyTrash.setLabel("Empty Trash (admin only)");
+            }
             panel.add(drpFillFileTable);
         } catch (Exception e) {
             //e.printStackTrace();
@@ -71,12 +76,15 @@ public class GUI extends JFrame {
     private String getOS() {
         try {
             String os = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
-            if (os.startsWith("win"))
+            if (os.startsWith("win")) {
                 return "Windows";
-            if (os.startsWith("mac"))
+            }
+            if (os.startsWith("mac")) {
                 return "Mac OS";
-            if (os.contains("linux"))
+            }
+            if (os.contains("linux")) {
                 return "Linux";
+            }
         } catch (Exception e) {
             //e.printStackTrace();
         }
@@ -91,7 +99,8 @@ public class GUI extends JFrame {
                 for (File drivePath : File.listRoots()) {
                     String driveType = fsv.getSystemTypeDescription(drivePath);
                     if (driveType.equals("Local Disk") || driveType.equals("Removable Disk")) {
-                        String displayName = fsv.getSystemDisplayName(drivePath).substring(0, fsv.getSystemDisplayName(drivePath).length() - 4);
+                        String displayName = fsv.getSystemDisplayName(drivePath)
+                            .substring(0, fsv.getSystemDisplayName(drivePath).length() - 4);
                         drives.add(new Drive(this, drivePath, displayName));
                     }
                 }
@@ -100,7 +109,8 @@ public class GUI extends JFrame {
                 File[] volumes = new File("/Volumes").listFiles();
                 for (File drivePath : volumes) {
                     if (drivePath.isDirectory()) {
-                        String displayName = (drivePath + "").substring(9, (drivePath + "").length());
+                        String displayName =
+                            (drivePath + "").substring(9, (drivePath + "").length());
                         drives.add(new Drive(this, drivePath, displayName));
                     }
                 }
@@ -122,7 +132,8 @@ public class GUI extends JFrame {
                     File drivePath = new File(driveS[2]);
                     String displayName = "";
                     if (drive.contains("[") && drive.contains("]")) {
-                        displayName = drive.substring(drive.indexOf("[") + 1, drive.lastIndexOf("]"));
+                        displayName =
+                            drive.substring(drive.indexOf("[") + 1, drive.lastIndexOf("]"));
                     }
                     drives.add(new Drive(this, drivePath, displayName));
                 }
