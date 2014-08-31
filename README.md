@@ -5,7 +5,7 @@ Requirements
 ------------
 - Java 8.0 x64
 - Windows, Mac, or a common Linux distro
-- 200MB + 200MB per drive of free RAM
+- 100MB + 50MB per drive of free RAM
 
 Instructions
 ------------
@@ -21,9 +21,10 @@ Known Issues
 
 Planned Updates
 ---------------
-- Bug fixes
-- In depth pass options
 - Better GUI
+- Reduce memory usage
+- In depth pass options
+- Bug fixes
 
 Reasons for Creation || Issues with Similar Programs
 ----------------------------------------------------

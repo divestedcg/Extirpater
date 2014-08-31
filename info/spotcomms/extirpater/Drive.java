@@ -70,6 +70,7 @@ public class Drive implements ActionListener {
                     @Override
                     public void run() {
                         try {
+                            System.gc();
                             running = true;
                             finished = false;
                             btnControl.setText("Stop");
@@ -90,9 +91,6 @@ public class Drive implements ActionListener {
                                     case 3:
                                         amtFillFileTable = 1000000;
                                         break;
-                                    case 4:
-                                        amtFillFileTable = 1000000000;
-                                        break;
                                 }
                             }
                             boolean emptyTrash = false;
@@ -102,7 +100,7 @@ public class Drive implements ActionListener {
                                 emptyTrash = gui.chkEmptyTrash.getState();
                             }
                             Thread mainThread = start(emptyTrash, fillFileTable, amtFillFileTable,
-                                gui.drpPasses.getSelectedIndex() + 1);
+                                gui.drpPasses.getSelectedIndex());
                             mainThread.start();
                             while (running) {
                                 //Do nothing
@@ -142,6 +140,8 @@ public class Drive implements ActionListener {
                         deleteTempFiles();
                     }
                     switch (passes) {
+                        case 0:
+                            break;
                         case 1:
                             eraseFreeSpace((byte) 0x00, 1);
                             deleteTempFiles();
@@ -237,15 +237,15 @@ public class Drive implements ActionListener {
             }
             int c = 0;
             try {
-                while ((drivePath.getFreeSpace() / (megabyte * 100)) >= 5) {
+                while ((drivePath.getFreeSpace() / (megabyte * 25)) >= 8) {
                     File file =
                         new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(229));
                     file.createNewFile();
                     FileOutputStream fileOutputStream = new FileOutputStream(file);
                     if (value == 0x42) {
-                        fileOutputStream.write(getRandomByteArray((megabyte * 100)));
+                        fileOutputStream.write(getRandomByteArray((megabyte * 25)));
                     } else {
-                        fileOutputStream.write(getByteArray(value, (megabyte * 100)));
+                        fileOutputStream.write(getByteArray(value, (megabyte * 25)));
                     }
                     fileOutputStream.flush();
                     fileOutputStream.close();

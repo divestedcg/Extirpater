@@ -22,12 +22,12 @@ public class GUI extends JFrame {
     private ArrayList<Drive> drives = new ArrayList<Drive>();
     private int amtDrives = 0;
     public JComboBox drpPasses =
-        new JComboBox(new String[] {"1 Pass, 0", "2 Passes, 0/1", "3 Passes, 0/1/Random"});
+        new JComboBox(new String[] {"Don't Erase Free Space", "1 Pass, 0", "2 Passes, 0/1",
+            "3 Passes, 0/1/Random"});
     public Checkbox chkEmptyTrash = new Checkbox("Empty Trash", true);
     public JComboBox drpFillFileTable = new JComboBox(
         new String[] {"Don't Fill File Table", "Fill File Table, 20,000 Files",
-            "Fill File Table, 200,000 Files", "Fill File Table, 2,000,000 Files",
-            "Fill File Table, 2,000,000,000 Files"});
+            "Fill File Table, 200,000 Files", "Fill File Table, 2,000,000 Files"});
 
     public GUI() {
         try {
@@ -55,7 +55,19 @@ public class GUI extends JFrame {
                 chkEmptyTrash.setLabel("Empty Trash (admin only)");
             }
             panel.add(drpFillFileTable);
-            System.gc();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        while (true) {
+                            System.gc();
+                            Thread.sleep(10000);
+                        }
+                    } catch (Exception e) {
+
+                    }
+                }
+            }).start();
         } catch (Exception e) {
             //e.printStackTrace();
         }
