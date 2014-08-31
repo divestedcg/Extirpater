@@ -5,7 +5,7 @@ Requirements
 ------------
 - Java 8.0 x64
 - Windows, Mac, or a common Linux distro
-- ~1GB of free RAM
+- 200MB + 200MB per drive of free RAM
 
 Instructions
 ------------

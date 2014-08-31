@@ -55,6 +55,7 @@ public class GUI extends JFrame {
                 chkEmptyTrash.setLabel("Empty Trash (admin only)");
             }
             panel.add(drpFillFileTable);
+            System.gc();
         } catch (Exception e) {
             //e.printStackTrace();
         }

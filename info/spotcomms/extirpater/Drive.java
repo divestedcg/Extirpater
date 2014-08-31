@@ -27,6 +27,7 @@ public class Drive implements ActionListener {
     private static int bite = 1;
     private static int kilobyte = 1000;
     private static int megabyte = 1000000;
+    private static int gigabyte = 1000000000;
 
     private boolean running = false;
     private boolean finished = false;
@@ -113,6 +114,7 @@ public class Drive implements ActionListener {
                                 lblStatus.setText("Stopped");
                             }
                             deleteDirectory(extirpaterPath);
+                            System.gc();
                             btnControl.setText("Start");
                             btnControl.setEnabled(true);
                         } catch (Exception e) {
@@ -192,6 +194,7 @@ public class Drive implements ActionListener {
                 new ProcessBuilder("rm", "-rf", "~/.Trash/*").start();
                 new ProcessBuilder("rm", "-rf", "~/.local/share/Trash/files/*").start();
             }
+            System.gc();
             lblStatus.setText("Emptied Trash");
             Thread.sleep(5000);
         } catch (Exception e) {
@@ -210,10 +213,9 @@ public class Drive implements ActionListener {
             for (int x = 0; x < amtFiles; x++) {
                 File f = new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(229));
                 f.createNewFile();
-                if (x % 1000 == 0) {
-                    lblStatus.setText("Filling File Table, Pass " + pass + " of 2, File: " + x);
-                }
+                lblStatus.setText("Filling File Table, Pass " + pass + " of 2, File: " + x);
             }
+            System.gc();
             lblStatus.setText("Filled File Table");
             Thread.sleep(5000);
         } catch (Exception e) {
@@ -233,6 +235,29 @@ public class Drive implements ActionListener {
             } else {
                 lblStatus.setText("Erasing Free Space, Pass: " + pass + ", Value: " + value);
             }
+            int c = 0;
+            try {
+                while ((drivePath.getFreeSpace() / (megabyte * 100)) >= 5) {
+                    File file =
+                        new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(229));
+                    file.createNewFile();
+                    FileOutputStream fileOutputStream = new FileOutputStream(file);
+                    if (value == 0x42) {
+                        fileOutputStream.write(getRandomByteArray((megabyte * 100)));
+                    } else {
+                        fileOutputStream.write(getByteArray(value, (megabyte * 100)));
+                    }
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                    c++;
+                    if (c % 1 == 0) {
+                        System.gc();
+                    }
+                }
+            } catch (Exception e) {
+                //Possible out of space exception
+            }
+            c = 0;
             try {
                 while ((drivePath.getFreeSpace() / megabyte) >= 100) {
                     File file =
@@ -246,10 +271,15 @@ public class Drive implements ActionListener {
                     }
                     fileOutputStream.flush();
                     fileOutputStream.close();
+                    c++;
+                    if (c % 100 == 0) {
+                        System.gc();
+                    }
                 }
             } catch (Exception e) {
                 //Possible out of space exception
             }
+            c = 0;
             try {
                 while ((drivePath.getFreeSpace() / kilobyte) >= 1) {
                     File file =
@@ -263,10 +293,15 @@ public class Drive implements ActionListener {
                     }
                     fileOutputStream.flush();
                     fileOutputStream.close();
+                    c++;
+                    if (c % 1000 == 0) {
+                        System.gc();
+                    }
                 }
             } catch (Exception e) {
                 //Possible out of space exception
             }
+            c = 0;
             try {
                 while ((drivePath.getFreeSpace() / bite) >= 1) {
                     File file =
@@ -280,10 +315,15 @@ public class Drive implements ActionListener {
                     }
                     fileOutputStream.flush();
                     fileOutputStream.close();
+                    c++;
+                    if (c % 100000 == 0) {
+                        System.gc();
+                    }
                 }
             } catch (Exception e) {
                 //Possible out of space exception
             }
+            System.gc();
             lblStatus.setText("Erased Free Space");
             Thread.sleep(5000);
         } catch (Exception e) {
@@ -299,7 +339,7 @@ public class Drive implements ActionListener {
     public void deleteTempFiles() {
         try {
             lblStatus.setText("Cleaning Up");
-            for (int x = 0; x < 1000; x++) {
+            for (int x = 0; x < 10; x++) {
                 File[] allRootFiles = extirpaterPath.listFiles();
                 for (File f : allRootFiles) {
                     if (f.isFile()) {
@@ -309,6 +349,7 @@ public class Drive implements ActionListener {
                     }
                 }
             }
+            System.gc();
             lblStatus.setText("Cleaned Up");
             Thread.sleep(5000);
         } catch (Exception e) {
