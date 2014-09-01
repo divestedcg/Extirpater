@@ -16,12 +16,18 @@ Instructions
 
 Known Issues
 ------------
-- Sometimes the "Extirpater" directory doesn't get deleted, don't worry its empty thou
-- The trash doesn't always get emptied
+- Sometimes the "Extirpater" directory doesn't get deleted. Just delete it once the program is done running on that drive
+- Sometimes the window will appear, however it will be empty. Wait a few seconds and try resizing it
+- On all systems, emptying the trash requires admin/root
+- On Mac and Linux systems, root is required to run on the system drive
+- On Mac systems, if a drive isn't mounted in "/Volumes" it will not be detected
+- On Linux systems, drives will only be detected if the "mount" command is available
+- On Linux systems, the drive name will not always appear
 
 Planned Updates
 ---------------
 - Better GUI
+- Reduce CPU usage
 - Reduce memory usage
 - In depth pass options
 - Bug fixes
@@ -36,5 +42,6 @@ Credits
 -------
 - launch4j
 - Joe aka Dr_fantasmo
+- http://en.wikipedia.org/wiki/Data_erasure
 - http://stackoverflow.com/a/23538961
 - http://stackoverflow.com/a/15608620
