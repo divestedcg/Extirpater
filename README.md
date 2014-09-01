@@ -30,6 +30,7 @@ Planned Updates
 - Reduce CPU usage
 - Reduce memory usage
 - In depth pass options
+- Verification
 - Bug fixes
 
 Reasons for Creation || Issues with Similar Programs
