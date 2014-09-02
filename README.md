@@ -16,8 +16,7 @@ Instructions
 
 Known Issues
 ------------
-- Sometimes the "Extirpater" directory doesn't get deleted. Just delete it once the program is done running on that drive
-- Sometimes the window will appear, however it will be empty. Wait a few seconds and try resizing it
+- Sometimes the window will appear, however it will be empty or parts missing. Wait a few seconds and try resizing it
 - On all systems, emptying the trash requires admin/root
 - On Mac and Linux systems, root is required to run on the system drive
 - On Mac systems, if a drive isn't mounted in "/Volumes" it will not be detected
@@ -46,3 +45,4 @@ Credits
 - http://en.wikipedia.org/wiki/Data_erasure
 - http://stackoverflow.com/a/23538961
 - http://stackoverflow.com/a/15608620
+- http://fahdshariff.blogspot.ru/2011/08/java-7-deleting-directory-by-walking.html

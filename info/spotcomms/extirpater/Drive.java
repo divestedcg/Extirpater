@@ -5,6 +5,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.security.SecureRandom;
 import java.util.Random;
 
@@ -108,7 +114,8 @@ public class Drive implements ActionListener {
                                 deleteTempFiles();
                                 lblStatus.setText("Stopped");
                             }
-                            deleteDirectory(extirpaterPath);
+                            System.gc();
+                            deleteDirectory(extirpaterPath.toPath());
                             btnControl.setText("Start");
                             btnControl.setEnabled(true);
                         } catch (Exception e) {
@@ -208,8 +215,8 @@ public class Drive implements ActionListener {
                 f.createNewFile();
                 lblStatus.setText("Filling File Table, Pass " + pass + " of 2, File: " + x);
             }
-            deleteTempFiles();
             System.gc();
+            deleteTempFiles();
             lblStatus.setText("Filled File Table");
             Thread.sleep(5000);
         } catch (Exception e) {
@@ -336,17 +343,28 @@ public class Drive implements ActionListener {
         return bytes;
     }
 
-    private void deleteDirectory(File dir) {
+    //Credit: http://fahdshariff.blogspot.ru/2011/08/java-7-deleting-directory-by-walking.html
+    private void deleteDirectory(Path dir) {
         try {
-            File[] files = dir.listFiles();
-            for (File f : files) {
-                if (f.isDirectory()) {
-                    deleteDirectory(f);
-                    f.delete();
-                } else {
-                    f.delete();
+            Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                    throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
                 }
-            }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc)
+                    throws IOException {
+                    if (exc == null) {
+                        Files.delete(dir);
+                        return FileVisitResult.CONTINUE;
+                    } else {
+                        throw exc;
+                    }
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
