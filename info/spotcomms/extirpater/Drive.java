@@ -24,10 +24,8 @@ public class Drive implements ActionListener {
     private JButton btnControl;
     private JLabel lblStatus;
 
-    private static int bite = 1;
     private static int kilobyte = 1000;
     private static int megabyte = 1000000;
-    private static int gigabyte = 1000000000;
 
     private boolean running = false;
     private boolean finished = false;
@@ -235,93 +233,68 @@ public class Drive implements ActionListener {
             } else {
                 lblStatus.setText("Erasing Free Space, Pass: " + pass + ", Value: " + value);
             }
-            int c = 0;
             try {
-                while ((drivePath.getFreeSpace() / (megabyte * 25)) >= 8) {
-                    File file =
-                        new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(229));
-                    file.createNewFile();
-                    FileOutputStream fileOutputStream = new FileOutputStream(file);
-                    if (value == 0x42) {
-                        fileOutputStream.write(getRandomByteArray((megabyte * 25)));
-                    } else {
-                        fileOutputStream.write(getByteArray(value, (megabyte * 25)));
+                File tempFile = new File(extirpaterPath + "/Extirpater_Temp-" + value);
+                tempFile.createNewFile();
+                FileOutputStream fos = new FileOutputStream(tempFile);
+                if (value != 0x42) {
+                    byte[] twentyfiveMegabyteArray = null;
+                    byte[] oneMegabyteArray = null;
+                    byte[] oneKilobyteArray = null;
+                    for (ByteArray byteArray : gui.byteArrays) {
+                        if (byteArray.getValue() == value) {
+                            if (byteArray.getLength() == megabyte * 25) {
+                                twentyfiveMegabyteArray = byteArray.getByteArray();
+                            }
+                            if (byteArray.getLength() == megabyte) {
+                                oneMegabyteArray = byteArray.getByteArray();
+                            }
+                            if (byteArray.getLength() == kilobyte) {
+                                oneKilobyteArray = byteArray.getByteArray();
+                            }
+                        }
                     }
-                    fileOutputStream.flush();
-                    fileOutputStream.close();
-                    c++;
-                    if (c % 1 == 0) {
-                        System.gc();
+                    if (twentyfiveMegabyteArray == null) {
+                        twentyfiveMegabyteArray =
+                            new ByteArray(gui, value, megabyte * 25).getByteArray();
+                    }
+                    if (oneMegabyteArray == null) {
+                        oneMegabyteArray = new ByteArray(gui, value, megabyte).getByteArray();
+                    }
+                    if (oneKilobyteArray == null) {
+                        oneKilobyteArray = new ByteArray(gui, value, kilobyte).getByteArray();
+                    }
+                    System.gc();
+                    while (drivePath.getFreeSpace() / megabyte >= 25) {
+                        fos.write(twentyfiveMegabyteArray);
+                    }
+                    while (drivePath.getFreeSpace() / megabyte >= 1) {
+                        fos.write(oneMegabyteArray);
+                    }
+                    while (drivePath.getFreeSpace() / kilobyte >= 1) {
+                        fos.write(oneKilobyteArray);
+                    }
+                    while (drivePath.getFreeSpace() >= 1) {
+                        fos.write(value);
+                    }
+                } else {
+                    while (drivePath.getFreeSpace() / megabyte >= 25) {
+                        fos.write(getRandomByteArray(megabyte * 25));
+                    }
+                    while (drivePath.getFreeSpace() / megabyte >= 1) {
+                        fos.write(getRandomByteArray(megabyte));
+                    }
+                    while (drivePath.getFreeSpace() / kilobyte >= 1) {
+                        fos.write(getRandomByteArray(kilobyte));
+                    }
+                    while (drivePath.getFreeSpace() >= 1) {
+                        fos.write(getRandomByteArray(1));
                     }
                 }
+                fos.flush();
+                fos.close();
             } catch (Exception e) {
-                //Possible out of space exception
-            }
-            c = 0;
-            try {
-                while ((drivePath.getFreeSpace() / megabyte) >= 100) {
-                    File file =
-                        new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(229));
-                    file.createNewFile();
-                    FileOutputStream fileOutputStream = new FileOutputStream(file);
-                    if (value == 0x42) {
-                        fileOutputStream.write(getRandomByteArray(megabyte));
-                    } else {
-                        fileOutputStream.write(getByteArray(value, megabyte));
-                    }
-                    fileOutputStream.flush();
-                    fileOutputStream.close();
-                    c++;
-                    if (c % 100 == 0) {
-                        System.gc();
-                    }
-                }
-            } catch (Exception e) {
-                //Possible out of space exception
-            }
-            c = 0;
-            try {
-                while ((drivePath.getFreeSpace() / kilobyte) >= 1) {
-                    File file =
-                        new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(229));
-                    file.createNewFile();
-                    FileOutputStream fileOutputStream = new FileOutputStream(file);
-                    if (value == 0x42) {
-                        fileOutputStream.write(getRandomByteArray(kilobyte));
-                    } else {
-                        fileOutputStream.write(getByteArray(value, kilobyte));
-                    }
-                    fileOutputStream.flush();
-                    fileOutputStream.close();
-                    c++;
-                    if (c % 1000 == 0) {
-                        System.gc();
-                    }
-                }
-            } catch (Exception e) {
-                //Possible out of space exception
-            }
-            c = 0;
-            try {
-                while ((drivePath.getFreeSpace() / bite) >= 1) {
-                    File file =
-                        new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(229));
-                    file.createNewFile();
-                    FileOutputStream fileOutputStream = new FileOutputStream(file);
-                    if (value == 0x42) {
-                        fileOutputStream.write(getRandomByteArray(bite));
-                    } else {
-                        fileOutputStream.write(getByteArray(value, bite));
-                    }
-                    fileOutputStream.flush();
-                    fileOutputStream.close();
-                    c++;
-                    if (c % 100000 == 0) {
-                        System.gc();
-                    }
-                }
-            } catch (Exception e) {
-                //Possible out of space exception
+                //e.printStackTrace();
             }
             System.gc();
             lblStatus.setText("Erased Free Space");
@@ -371,14 +344,6 @@ public class Drive implements ActionListener {
             temp = temp + base.substring(rn, rn + 1);
         }
         return temp;
-    }
-
-    private byte[] getByteArray(int b, int length) {
-        byte[] bytes = new byte[length];
-        for (int x = 0; x < length; x++) {
-            bytes[x] = (byte) b;
-        }
-        return bytes;
     }
 
     private byte[] getRandomByteArray(int length) {

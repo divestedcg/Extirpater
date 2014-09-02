@@ -29,6 +29,8 @@ public class GUI extends JFrame {
         new String[] {"Don't Fill File Table", "Fill File Table, 20,000 Files",
             "Fill File Table, 200,000 Files", "Fill File Table, 2,000,000 Files"});
 
+    public ArrayList<ByteArray> byteArrays = new ArrayList<ByteArray>();
+
     public GUI() {
         try {
             isAdmin = isAdmin();
