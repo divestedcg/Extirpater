@@ -5,7 +5,7 @@ Requirements
 ------------
 - Java 8.0 x64
 - Windows, Mac, or a common Linux distro
-- 50MB + 50MB per drive of free RAM
+- 100MB + 25MB per drive of free RAM or 100MB per drive if filling file table
 
 Instructions
 ------------
@@ -27,8 +27,8 @@ Known Issues
 Planned Updates
 ---------------
 - Better GUI
-- Reduce CPU usage, Goal: <2% CPU usage on my dual L5639's, currently ~5%
-- Reduce memory usage, Goal: <25MB per drive, currently ~50MB
+- Reduce CPU usage, Goal: <2% CPU usage on my dual L5639's, currently ~3-20% mostly ~5%
+- Reduce memory usage, Goal: <10MB per drive, currently ~25MB
 - In depth pass options
 - Verification
 - Bug fixes

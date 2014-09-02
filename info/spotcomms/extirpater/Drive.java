@@ -68,7 +68,6 @@ public class Drive implements ActionListener {
                     @Override
                     public void run() {
                         try {
-                            System.gc();
                             running = true;
                             finished = false;
                             btnControl.setText("Stop");
@@ -110,11 +109,10 @@ public class Drive implements ActionListener {
                                 lblStatus.setText("Stopped");
                             }
                             deleteDirectory(extirpaterPath);
-                            System.gc();
                             btnControl.setText("Start");
                             btnControl.setEnabled(true);
                         } catch (Exception e) {
-                            //e.printStackTrace();
+                            e.printStackTrace();
                         }
                     }
                 }).start();
@@ -135,7 +133,6 @@ public class Drive implements ActionListener {
                     }
                     if (fillFileTable) {
                         fillFileTable(amtFillFileTable, 1);
-                        deleteTempFiles();
                     }
                     switch (passes) {
                         case 0:
@@ -161,14 +158,13 @@ public class Drive implements ActionListener {
                     }
                     if (fillFileTable) {
                         fillFileTable(amtFillFileTable, 2);
-                        deleteTempFiles();
                     }
                     deleteTempFiles();
                     running = false;
                     finished = true;
                     lblStatus.setText("Finished!");
                 } catch (Exception e) {
-                    //e.printStackTrace();
+                    e.printStackTrace();
                 }
             }
         });
@@ -192,11 +188,10 @@ public class Drive implements ActionListener {
                 new ProcessBuilder("rm", "-rf", "~/.Trash/*").start();
                 new ProcessBuilder("rm", "-rf", "~/.local/share/Trash/files/*").start();
             }
-            System.gc();
             lblStatus.setText("Emptied Trash");
             Thread.sleep(5000);
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             lblStatus.setText("Failed to empty trash");
             try {
                 Thread.sleep(5000);
@@ -213,11 +208,12 @@ public class Drive implements ActionListener {
                 f.createNewFile();
                 lblStatus.setText("Filling File Table, Pass " + pass + " of 2, File: " + x);
             }
+            deleteTempFiles();
             System.gc();
             lblStatus.setText("Filled File Table");
             Thread.sleep(5000);
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             lblStatus.setText("Failed to Fill File Table");
             try {
                 Thread.sleep(5000);
@@ -254,17 +250,6 @@ public class Drive implements ActionListener {
                             }
                         }
                     }
-                    if (twentyfiveMegabyteArray == null) {
-                        twentyfiveMegabyteArray =
-                            new ByteArray(gui, value, megabyte * 25).getByteArray();
-                    }
-                    if (oneMegabyteArray == null) {
-                        oneMegabyteArray = new ByteArray(gui, value, megabyte).getByteArray();
-                    }
-                    if (oneKilobyteArray == null) {
-                        oneKilobyteArray = new ByteArray(gui, value, kilobyte).getByteArray();
-                    }
-                    System.gc();
                     while (drivePath.getFreeSpace() / megabyte >= 25) {
                         fos.write(twentyfiveMegabyteArray);
                     }
@@ -296,11 +281,10 @@ public class Drive implements ActionListener {
             } catch (Exception e) {
                 //e.printStackTrace();
             }
-            System.gc();
             lblStatus.setText("Erased Free Space");
             Thread.sleep(5000);
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             lblStatus.setText("Failed to Erase Free Space");
             try {
                 Thread.sleep(5000);
@@ -322,11 +306,10 @@ public class Drive implements ActionListener {
                     }
                 }
             }
-            System.gc();
             lblStatus.setText("Cleaned Up");
             Thread.sleep(5000);
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             lblStatus.setText("Failed to Clean Up");
             try {
                 Thread.sleep(5000);
@@ -365,7 +348,7 @@ public class Drive implements ActionListener {
                 }
             }
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
     }
 

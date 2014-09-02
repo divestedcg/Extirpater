@@ -12,7 +12,7 @@ public class Start {
         try {
             GUI g = new GUI();
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
     }
 

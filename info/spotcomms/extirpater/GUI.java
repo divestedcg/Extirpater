@@ -57,21 +57,14 @@ public class GUI extends JFrame {
                 chkEmptyTrash.setLabel("Empty Trash (admin only)");
             }
             panel.add(drpFillFileTable);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        while (true) {
-                            System.gc();
-                            Thread.sleep(10000);
-                        }
-                    } catch (Exception e) {
-
-                    }
-                }
-            }).start();
+            new ByteArray(this, (byte) 0x00, 1000000 * 25);
+            new ByteArray(this, (byte) 0x00, 1000000);
+            new ByteArray(this, (byte) 0x00, 1000);
+            new ByteArray(this, (byte) 0xFF, 1000000 * 25);
+            new ByteArray(this, (byte) 0xFF, 1000000);
+            new ByteArray(this, (byte) 0xFF, 1000);
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -101,7 +94,7 @@ public class GUI extends JFrame {
                 return "Linux";
             }
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
         return "Unknown";
     }
@@ -154,7 +147,7 @@ public class GUI extends JFrame {
                 }
             }
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
