@@ -27,8 +27,8 @@ Known Issues
 Planned Updates
 ---------------
 - Better GUI
-- Reduce CPU usage: Goal <5% CPU usage on my dual L5639's
-- Reduce memory usage: Goal <50MB per drive
+- Reduce CPU usage: Goal <2% CPU usage on my dual L5639's, currently ~5%
+- Reduce memory usage: Goal <25MB per drive, currently ~50MB
 - In depth pass options
 - Verification
 - Bug fixes
