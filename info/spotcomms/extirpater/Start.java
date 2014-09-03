@@ -9,11 +9,7 @@ package info.spotcomms.extirpater;
 public class Start {
 
     public static void main(String[] args) {
-        try {
-            GUI g = new GUI();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        GUI g = new GUI();
     }
 
 }

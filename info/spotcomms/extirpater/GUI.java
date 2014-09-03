@@ -88,7 +88,7 @@ public class GUI extends JFrame {
                 return "Windows";
             }
             if (os.startsWith("mac")) {
-                return "Mac OS";
+                return "Mac";
             }
             if (os.contains("linux")) {
                 return "Linux";
@@ -113,7 +113,7 @@ public class GUI extends JFrame {
                     }
                 }
             }
-            if (os.equals("Mac OS")) {
+            if (os.equals("Mac")) {
                 File[] volumes = new File("/Volumes").listFiles();
                 for (File drivePath : volumes) {
                     if (drivePath.isDirectory()) {

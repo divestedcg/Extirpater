@@ -107,14 +107,13 @@ public class Drive implements ActionListener {
                             mainThread.start();
                             while (running) {
                                 //Do nothing
-                                Thread.sleep(500);
+                                Thread.sleep(1000);
                             }
                             if (!finished) {
                                 mainThread.stop();
                                 deleteTempFiles();
                                 lblStatus.setText("Stopped");
                             }
-                            System.gc();
                             deleteDirectory(extirpaterPath.toPath());
                             btnControl.setText("Start");
                             btnControl.setEnabled(true);
@@ -134,12 +133,13 @@ public class Drive implements ActionListener {
             public void run() {
                 try {
                     lblStatus.setText("Starting...");
-                    Thread.sleep(5000);
+                    Thread.sleep(2500);
                     if (emptyTrash) {
                         emptyTrash();
                     }
                     if (fillFileTable) {
                         fillFileTable(amtFillFileTable, 1);
+                        deleteTempFiles();
                     }
                     switch (passes) {
                         case 0:
@@ -165,6 +165,7 @@ public class Drive implements ActionListener {
                     }
                     if (fillFileTable) {
                         fillFileTable(amtFillFileTable, 2);
+                        deleteTempFiles();
                     }
                     deleteTempFiles();
                     running = false;
@@ -187,8 +188,7 @@ public class Drive implements ActionListener {
                     new ProcessBuilder("rmdir", "/S", "/Q", drivePath + "$RECYCLE.BIN").start();
                 }
             }
-            if (gui.os.equals("Mac OS")) {
-                Runtime rt = Runtime.getRuntime();
+            if (gui.os.equals("Mac")) {
                 new ProcessBuilder("rm", "-rf", "~/.Trash/*").start();
             }
             if (gui.os.equals("Linux")) {
@@ -196,12 +196,12 @@ public class Drive implements ActionListener {
                 new ProcessBuilder("rm", "-rf", "~/.local/share/Trash/files/*").start();
             }
             lblStatus.setText("Emptied Trash");
-            Thread.sleep(5000);
+            Thread.sleep(2500);
         } catch (Exception e) {
             e.printStackTrace();
             lblStatus.setText("Failed to empty trash");
             try {
-                Thread.sleep(5000);
+                Thread.sleep(2500);
             } catch (Exception e1) {
             }
         }
@@ -211,19 +211,17 @@ public class Drive implements ActionListener {
         try {
             lblStatus.setText("Filling File Table, Pass " + pass + " of 2");
             for (int x = 0; x < amtFiles; x++) {
-                File f = new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(229));
+                File f = new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(5));
                 f.createNewFile();
                 lblStatus.setText("Filling File Table, Pass " + pass + " of 2, File: " + x);
             }
-            System.gc();
-            deleteTempFiles();
             lblStatus.setText("Filled File Table");
-            Thread.sleep(5000);
+            Thread.sleep(2500);
         } catch (Exception e) {
             e.printStackTrace();
             lblStatus.setText("Failed to Fill File Table");
             try {
-                Thread.sleep(5000);
+                Thread.sleep(2500);
             } catch (Exception e1) {
             }
         }
@@ -289,12 +287,12 @@ public class Drive implements ActionListener {
                 //e.printStackTrace();
             }
             lblStatus.setText("Erased Free Space");
-            Thread.sleep(5000);
+            Thread.sleep(2500);
         } catch (Exception e) {
             e.printStackTrace();
             lblStatus.setText("Failed to Erase Free Space");
             try {
-                Thread.sleep(5000);
+                Thread.sleep(2500);
             } catch (Exception e1) {
             }
         }
@@ -302,24 +300,22 @@ public class Drive implements ActionListener {
 
     public void deleteTempFiles() {
         try {
+            System.gc();
             lblStatus.setText("Cleaning Up");
-            for (int x = 0; x < 10; x++) {
-                File[] allRootFiles = extirpaterPath.listFiles();
-                for (File f : allRootFiles) {
-                    if (f.isFile()) {
-                        if ((f + "").contains("Extirpater_Temp-")) {
-                            f.delete();
-                        }
+            for (File f : extirpaterPath.listFiles()) {
+                if (f.isFile()) {
+                    if ((f + "").contains("Extirpater_Temp-")) {
+                        f.delete();
                     }
                 }
             }
             lblStatus.setText("Cleaned Up");
-            Thread.sleep(5000);
+            Thread.sleep(2500);
         } catch (Exception e) {
             e.printStackTrace();
             lblStatus.setText("Failed to Clean Up");
             try {
-                Thread.sleep(5000);
+                Thread.sleep(2500);
             } catch (Exception e1) {
             }
         }
@@ -346,6 +342,7 @@ public class Drive implements ActionListener {
     //Credit: http://fahdshariff.blogspot.ru/2011/08/java-7-deleting-directory-by-walking.html
     private void deleteDirectory(Path dir) {
         try {
+            System.gc();
             Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
