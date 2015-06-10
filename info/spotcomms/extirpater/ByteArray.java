@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2015. Spot Communications
+ */
+
 package info.spotcomms.extirpater;
 
 /**
