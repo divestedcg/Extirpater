@@ -40,8 +40,8 @@ Reasons for Creation || Issues with Similar Programs
 
 Credits
 -------
-- launch4j
 - Joe aka Dr_fantasmo
+- Icon: http://ic8.link/11637
 - http://en.wikipedia.org/wiki/Data_erasure
 - http://stackoverflow.com/a/23538961
 - http://stackoverflow.com/a/15608620

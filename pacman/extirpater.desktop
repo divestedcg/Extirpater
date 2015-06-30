@@ -1,0 +1,10 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Exec=java -jar /usr/share/java/extirpater/extirpater.jar
+Icon=extirpater
+Categories=Utility;
+Name=Extirpater
+Comment=A multiplatform Java based free space eraser
