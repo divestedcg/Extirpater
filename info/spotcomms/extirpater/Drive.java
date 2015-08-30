@@ -40,6 +40,8 @@ public class Drive implements ActionListener {
     private boolean running = false;
     private boolean finished = false;
 
+    private SecureRandom secureRandom = null;
+
     public Drive(GUI gui, File drivePath, String driveName) {
         this.gui = gui;
         this.drivePath = drivePath;
@@ -53,6 +55,15 @@ public class Drive implements ActionListener {
         this.btnControl = new JButton("Start");
         this.btnControl.addActionListener(this);
         this.lblStatus = new JLabel("Idle", JLabel.CENTER);
+        try {
+            if(gui.os.equals("Linux")) {
+                secureRandom = SecureRandom.getInstance("NativePRNG");
+            } else {
+                secureRandom = SecureRandom.getInstance("SHA1PRNG");
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public JLabel getLblDriveName() {
@@ -337,7 +348,7 @@ public class Drive implements ActionListener {
     }
 
     private byte[] getRandomByteArray(int length) {
-        SecureRandom secureRandom = new SecureRandom();
+        secureRandom.setSeed(System.nanoTime());
         byte[] bytes = new byte[length];
         secureRandom.nextBytes(bytes);
         return bytes;
