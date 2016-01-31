@@ -22,6 +22,7 @@ Known Issues
 - On Mac systems, if a drive isn't mounted in "/Volumes" it will not be detected
 - On Linux systems, drives will only be detected if the "mount" command is available
 - On Linux systems, the drive name will not always appear
+- On Linux systems, only trash on the users home drive will be deleted
 
 Planned Updates
 ---------------
@@ -42,6 +43,7 @@ Credits
 -------
 - Joe aka Dr_fantasmo
 - Icon: http://ic8.link/11637
+- http://maths.uncommons.org
 - http://en.wikipedia.org/wiki/Data_erasure
 - http://stackoverflow.com/a/23538961
 - http://stackoverflow.com/a/15608620
