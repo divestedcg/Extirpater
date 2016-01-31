@@ -111,8 +111,7 @@ public class GUI extends JFrame {
                 for (File drivePath : File.listRoots()) {
                     String driveType = fsv.getSystemTypeDescription(drivePath);
                     if (driveType.equals("Local Disk") || driveType.equals("Removable Disk")) {
-                        String displayName = fsv.getSystemDisplayName(drivePath)
-                            .substring(0, fsv.getSystemDisplayName(drivePath).length() - 4);
+                        String displayName = drivePath + " (" + fsv.getSystemDisplayName(drivePath).substring(0, fsv.getSystemDisplayName(drivePath).length() - 4) + ")";
                         drives.add(new Drive(this, drivePath, displayName));
                     }
                 }
@@ -121,8 +120,7 @@ public class GUI extends JFrame {
                 File[] volumes = new File("/Volumes").listFiles();
                 for (File drivePath : volumes) {
                     if (drivePath.isDirectory()) {
-                        String displayName =
-                            (drivePath + "").substring(9, (drivePath + "").length());
+                        String displayName = drivePath + " (" + (drivePath + "").substring(9, (drivePath + "").length()) + ")";
                         drives.add(new Drive(this, drivePath, displayName));
                     }
                 }
@@ -144,8 +142,7 @@ public class GUI extends JFrame {
                     File drivePath = new File(driveS[2]);
                     String displayName = "";
                     if (drive.contains("[") && drive.contains("]")) {
-                        displayName =
-                            drive.substring(drive.indexOf("[") + 1, drive.lastIndexOf("]"));
+                        displayName = drivePath + " (" + drive.substring(drive.indexOf("[") + 1, drive.lastIndexOf("]")) + ")";
                     }
                     drives.add(new Drive(this, drivePath, displayName));
                 }
