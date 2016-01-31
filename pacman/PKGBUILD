@@ -1,14 +1,14 @@
 # Maintainer: Tad D <tad@spotco.us>
 pkgname=extirpater
-pkgver=v2.5
+pkgver=v2.6
 pkgrel=1
 pkgdesc="A multiplatform Java based free space eraser"
 arch=('any')
 url="https://github.com/SpotComms/Extirpater"
 license=('MIT')
 depends=('java-runtime>=8')
-source=($url/releases/download/$pkgver/$pkgname.jar $pkgname.desktop $pkgname-root.desktop $pkgname.png)
-md5sums=('691740567a7cd3dd20e193e6f03b4c88' '2b812f9af3ce39b1dd37447b2bb4b0ca' '2a985598f3ad9c0e21318298702f7d0d' 'b76e2885571d5ac4a035421bdeaaecad')
+source=($pkgname.jar $pkgname.desktop $pkgname-root.desktop $pkgname.png)
+md5sums=('32f130bf0863e6babe2a89d65c7acdab' '2b812f9af3ce39b1dd37447b2bb4b0ca' '2a985598f3ad9c0e21318298702f7d0d' 'b76e2885571d5ac4a035421bdeaaecad')
 
 build() {
   /bin/true

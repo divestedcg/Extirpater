@@ -4,6 +4,8 @@
 
 package info.spotcomms.extirpater;
 
+import org.uncommons.maths.random.*;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,7 +42,9 @@ public class Drive implements ActionListener {
     private boolean running = false;
     private boolean finished = false;
 
-    private SecureRandom secureRandom = null;
+    private SeedGenerator seedGenerator = null;
+    private MersenneTwisterRNG random = null;
+    private AESCounterRNG secureRandom = null;
 
     public Drive(GUI gui, File drivePath, String driveName) {
         this.gui = gui;
@@ -56,10 +60,17 @@ public class Drive implements ActionListener {
         this.btnControl.addActionListener(this);
         this.lblStatus = new JLabel("Idle", JLabel.CENTER);
         try {
-            if(gui.os.equals("Linux")) {
-                secureRandom = SecureRandom.getInstance("NativePRNG");
+            if(gui.os.equals("Linux") || gui.os.equals("Mac")) {
+                seedGenerator = new DevRandomSeedGenerator();
             } else {
-                secureRandom = SecureRandom.getInstance("SHA1PRNG");
+                seedGenerator = new SecureRandomSeedGenerator();
+            }
+            random = new MersenneTwisterRNG(seedGenerator.generateSeed(16));
+            try {
+                secureRandom = new AESCounterRNG(seedGenerator.generateSeed(32));
+            } catch(Exception e) {
+                secureRandom = new AESCounterRNG(seedGenerator.generateSeed(16));
+                e.printStackTrace();
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -340,15 +351,13 @@ public class Drive implements ActionListener {
         String base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         String temp = "";
         for (int i = 0; i < length; i++) {
-            int rn = new Random(System.currentTimeMillis() - Math
-                .round((Math.random() * 1000 * Math.random()) / Math.PI)).nextInt(base.length());
+            int rn = random.nextInt(base.length());
             temp = temp + base.substring(rn, rn + 1);
         }
         return temp;
     }
 
     private byte[] getRandomByteArray(int length) {
-        secureRandom.setSeed(System.nanoTime());
         byte[] bytes = new byte[length];
         secureRandom.nextBytes(bytes);
         return bytes;
