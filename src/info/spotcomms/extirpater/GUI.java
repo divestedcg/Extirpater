@@ -8,9 +8,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 import java.util.prefs.Preferences;
 
 /**
@@ -132,17 +130,38 @@ public class GUI extends JFrame {
                 ArrayList<String> drivesTemp = new ArrayList<String>();
                 while (s.hasNextLine()) {
                     String drive = s.nextLine();
-                    if (drive.startsWith("/dev/sd")) {
+                    if (drive.startsWith("/dev/sd") || drive.startsWith("/dev/vd") || drive.startsWith("/dev/mmcblk")) {
                         drivesTemp.add(drive);
                     }
                 }
                 s.close();
+                Collections.sort(drivesTemp);
                 for (String drive : drivesTemp) {
                     String[] driveS = drive.split(" ");
                     File drivePath = new File(driveS[2]);
-                    String displayName = "";
+                    String driveId = driveS[0].split("/dev/")[1];
+                    String ssd = "";
+                    if(driveId.startsWith("sd") || driveId.startsWith("vd")) {
+                        driveId = driveId.substring(0, 3);
+                        Scanner rotational = new Scanner(new File("/sys/block/" + driveId + "/queue/rotational"));
+                        ssd = rotational.nextLine();
+                        rotational.close();
+                    }
+                    String displayName = drivePath + "";
                     if (drive.contains("[") && drive.contains("]")) {
-                        displayName = drivePath + " (" + drive.substring(drive.indexOf("[") + 1, drive.lastIndexOf("]")) + ")";
+                        displayName += " (" + drive.substring(drive.indexOf("[") + 1, drive.lastIndexOf("]")) + ")";
+                    }
+                    if (ssd.equals("0")) {
+                        displayName += " [SSD] ";
+                    }
+                    if (driveId.startsWith("mmcblk")) {
+                        displayName += " [FLASH] ";
+                    }
+                    if(driveId.startsWith("vd")) {
+                        displayName += " [VIRTUAL] ";
+                    }
+                    if (driveS[5].contains("compress")) {
+                        displayName += " [COMPRESSED] ";
                     }
                     drives.add(new Drive(this, drivePath, displayName));
                 }
