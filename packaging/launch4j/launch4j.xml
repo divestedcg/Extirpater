@@ -3,7 +3,7 @@
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
   <jar>/home/spotcomms/Development/Java/IntelliJ_Workspace/Personal/out/artifacts/Extirpater_jar/Extirpater.jar</jar>
-  <outfile>/home/spotcomms/Development/Java/IntelliJ_Workspace/Personal/Extirpater/src/launch4j/Extirpater.exe</outfile>
+  <outfile>/mnt/Drive-1/Development/Java/IntelliJ_Workspace/Personal/Extirpater/packaging/builds/Extirpater.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -13,11 +13,7 @@
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon>/home/spotcomms/Development/Java/IntelliJ_Workspace/Personal/Extirpater/src/launch4j/extirpater.ico</icon>
-  <singleInstance>
-    <mutexName>extirpater</mutexName>
-    <windowTitle></windowTitle>
-  </singleInstance>
+  <icon>/mnt/Drive-1/Development/Java/IntelliJ_Workspace/Personal/Extirpater/packaging/launch4j/extirpater.ico</icon>
   <jre>
     <path></path>
     <bundledJre64Bit>false</bundledJre64Bit>
@@ -28,14 +24,14 @@
     <runtimeBits>64/32</runtimeBits>
   </jre>
   <versionInfo>
-    <fileVersion>2.6.0.0</fileVersion>
-    <txtFileVersion>2.6.0.0</txtFileVersion>
+    <fileVersion>1.0.0.0</fileVersion>
+    <txtFileVersion>1.0.0.0</txtFileVersion>
     <fileDescription>A multiplatform Java based free space eraser</fileDescription>
     <copyright>Spot Communications 2016</copyright>
-    <productVersion>2.6.0.0</productVersion>
-    <txtProductVersion>2.6.0.0</txtProductVersion>
+    <productVersion>2.6.1.0</productVersion>
+    <txtProductVersion>2.6.1.0</txtProductVersion>
     <productName>Extirpater</productName>
-    <companyName></companyName>
+    <companyName>Spot Communications Enterprises</companyName>
     <internalName>extirpter</internalName>
     <originalFilename>Extirpater.exe</originalFilename>
   </versionInfo>
