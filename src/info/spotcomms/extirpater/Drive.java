@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.SecureRandom;
+import java.text.DecimalFormat;
 import java.util.Random;
 
 /**
@@ -36,6 +37,8 @@ public class Drive implements ActionListener {
     private JButton btnControl;
     private JLabel lblStatus;
 
+    private double freeSpace;
+
     private static int kilobyte = 1000;
     private static int megabyte = 1000000;
 
@@ -45,6 +48,8 @@ public class Drive implements ActionListener {
     private SeedGenerator seedGenerator = null;
     private MersenneTwisterRNG random = null;
     private AESCounterRNG secureRandom = null;
+
+    private DecimalFormat df = new DecimalFormat("#.##");
 
     public Drive(GUI gui, File drivePath, String driveName) {
         this.gui = gui;
@@ -56,6 +61,7 @@ public class Drive implements ActionListener {
         } else {
             this.lblDriveName = new JLabel(this.driveName, JLabel.CENTER);
         }
+        this.freeSpace = (double)(drivePath.getFreeSpace() / megabyte);
         this.btnControl = new JButton("Start");
         this.btnControl.addActionListener(this);
         this.lblStatus = new JLabel("Idle", JLabel.CENTER);
@@ -255,12 +261,9 @@ public class Drive implements ActionListener {
 
     private void eraseFreeSpace(byte value, int pass) {
         try {
-            if (value == 0x42) {
-                lblStatus.setText("Erasing Free Space, Pass: " + pass + ", Value: Random");
-            } else {
-                lblStatus.setText("Erasing Free Space, Pass: " + pass + ", Value: " + value);
-            }
             try {
+                double progress = 0;
+                lblStatus.setText("Erasing, Pass: " + pass + ", Value: " + value);
                 File tempFile = new File(extirpaterPath + "/Extirpater_Temp-" + value);
                 tempFile.createNewFile();
                 FileOutputStream fos = new FileOutputStream(tempFile);
@@ -283,6 +286,8 @@ public class Drive implements ActionListener {
                     }
                     while (drivePath.getFreeSpace() / megabyte >= 25) {
                         fos.write(twentyfiveMegabyteArray);
+                        progress = 100.0 - ((((double)(drivePath.getFreeSpace()/megabyte))/freeSpace) * ((double)(100.0)));
+                        lblStatus.setText("Erasing, Pass: " + pass + ", Value: " + value + ", Progress: " + df.format(progress) + "%");
                     }
                     while (drivePath.getFreeSpace() / megabyte >= 1) {
                         fos.write(oneMegabyteArray);
@@ -294,8 +299,11 @@ public class Drive implements ActionListener {
                         fos.write(value);
                     }
                 } else {
+                    lblStatus.setText("Erasing, Pass: " + pass + ", Value: Random");
                     while (drivePath.getFreeSpace() / megabyte >= 25) {
                         fos.write(getRandomByteArray(megabyte * 25));
+                        progress = 100.0 - ((((double)(drivePath.getFreeSpace()/megabyte))/freeSpace) * ((double)(100.0)));
+                        lblStatus.setText("Erasing, Pass: " + pass + ", Value: Random" + ", Progress: " + df.format(progress) + "%");
                     }
                     while (drivePath.getFreeSpace() / megabyte >= 1) {
                         fos.write(getRandomByteArray(megabyte));

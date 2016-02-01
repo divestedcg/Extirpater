@@ -9,6 +9,7 @@ Requirements
 
 Instructions
 ------------
+0. (Optional) Run BleachBit on Linux/Windows and OnyX on Mac to delete unnecessary files
 1. Launch the program
 2. Choose whatever options you want on the bottom
 3. Click "Start" on any drives you want
@@ -22,7 +23,8 @@ Known Issues
 - On Mac systems, if a drive isn't mounted in "/Volumes" it will not be detected
 - On Linux systems, drives will only be detected if the "mount" command is available
 - On Linux systems, the drive name will not always appear
-- On Linux systems, only trash on the users home drive will be deleted
+- On Linux systems, only trash at /home/$USER will be deleted
+- On Linux systems, beyond 26 drives SSD detection will fail
 
 Planned Updates
 ---------------
@@ -32,6 +34,7 @@ Planned Updates
 - In depth pass options
 - Verification
 - Bug fixes
+- SSD/Flash/Virtual/Compressed detection on Mac/Windows
 
 Reasons for Creation || Issues with Similar Programs
 ----------------------------------------------------
