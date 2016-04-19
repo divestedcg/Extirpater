@@ -130,7 +130,7 @@ public class GUI extends JFrame {
                 ArrayList<String> drivesTemp = new ArrayList<String>();
                 while (s.hasNextLine()) {
                     String drive = s.nextLine();
-                    if (drive.startsWith("/dev/sd") || drive.startsWith("/dev/vd") || drive.startsWith("/dev/mmcblk")) {
+                    if (drive.startsWith("/dev/sd") || drive.startsWith("/dev/vd") || drive.startsWith("/dev/mmcblk") || drive.startsWith("/dev/mapper/")) {
                         drivesTemp.add(drive);
                     }
                 }
