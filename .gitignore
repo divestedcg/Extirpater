@@ -1,1 +1,5 @@
 packaging/builds/
+bin
+.settings
+.classpath
+.project
