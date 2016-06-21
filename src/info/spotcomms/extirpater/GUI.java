@@ -79,6 +79,7 @@ public class GUI extends JFrame {
             prefs.flush(); //BackingStoreException on Linux
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }

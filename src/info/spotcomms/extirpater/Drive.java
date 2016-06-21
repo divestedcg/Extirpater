@@ -37,7 +37,7 @@ public class Drive implements ActionListener {
     private JButton btnControl;
     private JLabel lblStatus;
 
-    private double freeSpace;
+    private long freeSpace;
 
     private static int kilobyte = 1000;
     private static int megabyte = 1000000;
@@ -61,7 +61,7 @@ public class Drive implements ActionListener {
         } else {
             this.lblDriveName = new JLabel(this.driveName, JLabel.CENTER);
         }
-        this.freeSpace = (double)(drivePath.getFreeSpace() / megabyte);
+        this.freeSpace = (drivePath.getFreeSpace() / megabyte);
         this.btnControl = new JButton("Start");
         this.btnControl.addActionListener(this);
         this.lblStatus = new JLabel("Idle", JLabel.CENTER);
@@ -235,6 +235,7 @@ public class Drive implements ActionListener {
             try {
                 Thread.sleep(2500);
             } catch (Exception e1) {
+              e1.printStackTrace();
             }
         }
     }
@@ -255,6 +256,7 @@ public class Drive implements ActionListener {
             try {
                 Thread.sleep(2500);
             } catch (Exception e1) {
+              e1.printStackTrace();
             }
         }
     }
@@ -318,7 +320,7 @@ public class Drive implements ActionListener {
                 fos.flush();
                 fos.close();
             } catch (Exception e) {
-                //e.printStackTrace();
+                e.printStackTrace();
             }
             lblStatus.setText("Erased Free Space");
             Thread.sleep(2500);
@@ -328,6 +330,7 @@ public class Drive implements ActionListener {
             try {
                 Thread.sleep(2500);
             } catch (Exception e1) {
+              e1.printStackTrace();
             }
         }
     }
@@ -351,6 +354,7 @@ public class Drive implements ActionListener {
             try {
                 Thread.sleep(2500);
             } catch (Exception e1) {
+              e1.printStackTrace();
             }
         }
     }
