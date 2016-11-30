@@ -181,9 +181,7 @@ public class Drive implements ActionListener {
                             deleteTempFiles();
                             break;
                         case 2:
-                            eraseFreeSpace((byte) 0x00, 1);
-                            deleteTempFiles();
-                            eraseFreeSpace((byte) 0xFF, 2);
+                            eraseFreeSpace((byte) 0x42, 1);
                             deleteTempFiles();
                             break;
                         case 3:
@@ -191,9 +189,16 @@ public class Drive implements ActionListener {
                             deleteTempFiles();
                             eraseFreeSpace((byte) 0xFF, 2);
                             deleteTempFiles();
+                            break;
+                        case 4:
+                            eraseFreeSpace((byte) 0x00, 1);
+                            deleteTempFiles();
+                            eraseFreeSpace((byte) 0xFF, 2);
+                            deleteTempFiles();
                             eraseFreeSpace((byte) 0x42, 3);
                             deleteTempFiles();
                             break;
+
                     }
                     if (fillFileTable) {
                         fillFileTable(amtFillFileTable, 2);
@@ -266,7 +271,7 @@ public class Drive implements ActionListener {
             try {
                 double progress = 0;
                 lblStatus.setText("Erasing, Pass: " + pass + ", Value: " + value);
-                File tempFile = new File(extirpaterPath + "/Extirpater_Temp-" + value);
+                File tempFile = new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(5));
                 tempFile.createNewFile();
                 FileOutputStream fos = new FileOutputStream(tempFile);
                 if (value != 0x42) {

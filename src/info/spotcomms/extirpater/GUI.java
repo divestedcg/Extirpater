@@ -24,7 +24,7 @@ public class GUI extends JFrame {
     private ArrayList<Drive> drives = new ArrayList<Drive>();
     private int amtDrives = 0;
     public JComboBox drpPasses =
-        new JComboBox(new String[] {"Don't Erase Free Space", "1 Pass, 0", "2 Passes, 0/1",
+        new JComboBox(new String[] {"Don't Erase Free Space", "1 Pass, 0", "1 Pass, Random", "2 Passes, 0/1",
             "3 Passes, 0/1/Random"});
     public Checkbox chkEmptyTrash = new Checkbox("Empty Trash", true);
     public JComboBox drpFillFileTable = new JComboBox(
@@ -41,7 +41,7 @@ public class GUI extends JFrame {
             amtDrives = drives.size();
             setTitle("Extirpater");
             setLocation(50, 50);
-            setSize(800, (amtDrives * 30) + 20);
+            setSize(850, (amtDrives * 35) + 20);
             JPanel panel = new JPanel();
             panel.setLayout(new GridLayout(amtDrives + 1, 3));
             setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -59,6 +59,8 @@ public class GUI extends JFrame {
                 chkEmptyTrash.setLabel("Empty Trash (admin only)");
             }
             panel.add(drpFillFileTable);
+            revalidate();
+            repaint();
             new ByteArray(this, (byte) 0x00, 1000000 * 25);
             new ByteArray(this, (byte) 0x00, 1000000);
             new ByteArray(this, (byte) 0x00, 1000);
