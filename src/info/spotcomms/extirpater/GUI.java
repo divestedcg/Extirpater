@@ -9,7 +9,10 @@ import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
+import java.util.Scanner;
 import java.util.prefs.Preferences;
 
 /**
@@ -25,13 +28,9 @@ public class GUI extends JFrame {
     protected String os;
     private ArrayList<Drive> drives = new ArrayList<Drive>();
     private int amtDrives = 0;
-    protected JComboBox drpPasses =
-        new JComboBox(new String[] {"Don't Erase Free Space", "1 Pass, 0", "1 Pass, Random", "2 Passes, 0/1",
-            "3 Passes, 0/1/Random"});
+    protected JComboBox drpPasses = new JComboBox(new String[] {"Don't Erase Free Space", "1 Pass, 0", "1 Pass, Random", "2 Passes, 0/1", "3 Passes, 0/1/Random"});
     protected Checkbox chkEmptyTrash = new Checkbox("Empty Trash", true);
-    protected JComboBox drpFillFileTable = new JComboBox(
-        new String[] {"Don't Fill File Table", "Fill File Table, 20,000 Files",
-            "Fill File Table, 200,000 Files", "Fill File Table, 2,000,000 Files"});
+    protected JComboBox drpFillFileTable = new JComboBox(new String[] {"Don't Fill File Table", "Fill File Table, 20,000 Files", "Fill File Table, 200,000 Files", "Fill File Table, 2,000,000 Files"});
 
     protected ArrayList<ByteArray> byteArrays = new ArrayList<ByteArray>();
 
@@ -147,7 +146,7 @@ public class GUI extends JFrame {
                     File drivePath = new File(driveS[2]);
                     String driveId = driveS[0].split("/dev/")[1];
                     String ssd = "";
-                    if(driveId.startsWith("sd") || driveId.startsWith("vd")) {
+                    if (driveId.startsWith("sd") || driveId.startsWith("vd")) {
                         driveId = driveId.substring(0, 3);
                         Scanner rotational = new Scanner(new File("/sys/block/" + driveId + "/queue/rotational"));
                         ssd = rotational.nextLine();
@@ -163,7 +162,7 @@ public class GUI extends JFrame {
                     if (driveId.startsWith("mmcblk")) {
                         displayName += " [FLASH] ";
                     }
-                    if(driveId.startsWith("vd")) {
+                    if (driveId.startsWith("vd")) {
                         displayName += " [VIRTUAL] ";
                     }
                     if (driveS[5].contains("compress")) {

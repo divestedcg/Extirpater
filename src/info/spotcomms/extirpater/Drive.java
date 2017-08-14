@@ -65,12 +65,12 @@ public class Drive implements ActionListener {
         this.btnControl.addActionListener(this);
         this.lblStatus = new JLabel("Idle", JLabel.CENTER);
         try {
-            if(gui.os.equals("Linux") || gui.os.equals("Mac")) {
+            if (gui.os.equals("Linux") || gui.os.equals("Mac")) {
                 seedGenerator = new DevRandomSeedGenerator();
             } else {
                 seedGenerator = new SecureRandomSeedGenerator();
             }
-            if(unlimitedStrength) {
+            if (unlimitedStrength) {
                 random = new CMWC4096RNG(seedGenerator.generateSeed(16384));
                 secureRandom = new AESCounterRNG(seedGenerator.generateSeed(32));
             } else {
@@ -78,7 +78,7 @@ public class Drive implements ActionListener {
                 random = new MersenneTwisterRNG(seedGenerator.generateSeed(16));
                 secureRandom = new AESCounterRNG(seedGenerator.generateSeed(16));
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -103,8 +103,7 @@ public class Drive implements ActionListener {
                 btnControl.setEnabled(false);
             } else {
                 new Thread(new Runnable() {
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         try {
                             running = true;
                             finished = false;
@@ -134,8 +133,7 @@ public class Drive implements ActionListener {
                             } else {
                                 emptyTrash = gui.chkEmptyTrash.getState();
                             }
-                            Thread mainThread = start(emptyTrash, fillFileTable, amtFillFileTable,
-                                gui.drpPasses.getSelectedIndex());
+                            Thread mainThread = start(emptyTrash, fillFileTable, amtFillFileTable, gui.drpPasses.getSelectedIndex());
                             mainThread.start();
                             while (running) {
                                 //Do nothing
@@ -160,8 +158,7 @@ public class Drive implements ActionListener {
 
     private Thread start(final boolean emptyTrash, final boolean fillFileTable, final int amtFillFileTable, final int passes) {
         return new Thread(new Runnable() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 try {
                     lblStatus.setText("Starting...");
                     Thread.sleep(2500);
@@ -238,7 +235,7 @@ public class Drive implements ActionListener {
             try {
                 Thread.sleep(2500);
             } catch (Exception e1) {
-              e1.printStackTrace();
+                e1.printStackTrace();
             }
         }
     }
@@ -259,7 +256,7 @@ public class Drive implements ActionListener {
             try {
                 Thread.sleep(2500);
             } catch (Exception e1) {
-              e1.printStackTrace();
+                e1.printStackTrace();
             }
         }
     }
@@ -291,7 +288,7 @@ public class Drive implements ActionListener {
                     }
                     while (drivePath.getFreeSpace() / megabyte >= 25) {
                         fos.write(twentyfiveMegabyteArray);
-                        progress = 100.0 - ((((double)(drivePath.getFreeSpace()/megabyte))/freeSpace) * ((double)(100.0)));
+                        progress = 100.0 - ((((double) (drivePath.getFreeSpace() / megabyte)) / freeSpace) * ((double) (100.0)));
                         lblStatus.setText("Erasing, Pass: " + pass + ", Value: " + value + ", Progress: " + df.format(progress) + "%");
                     }
                     while (drivePath.getFreeSpace() / megabyte >= 1) {
@@ -307,7 +304,7 @@ public class Drive implements ActionListener {
                     lblStatus.setText("Erasing, Pass: " + pass + ", Value: Random");
                     while (drivePath.getFreeSpace() / megabyte >= 25) {
                         fos.write(getRandomByteArray(megabyte * 25));
-                        progress = 100.0 - ((((double)(drivePath.getFreeSpace()/megabyte))/freeSpace) * ((double)(100.0)));
+                        progress = 100.0 - ((((double) (drivePath.getFreeSpace() / megabyte)) / freeSpace) * ((double) (100.0)));
                         lblStatus.setText("Erasing, Pass: " + pass + ", Value: Random" + ", Progress: " + df.format(progress) + "%");
                     }
                     while (drivePath.getFreeSpace() / megabyte >= 1) {
@@ -333,7 +330,7 @@ public class Drive implements ActionListener {
             try {
                 Thread.sleep(2500);
             } catch (Exception e1) {
-              e1.printStackTrace();
+                e1.printStackTrace();
             }
         }
     }
@@ -357,7 +354,7 @@ public class Drive implements ActionListener {
             try {
                 Thread.sleep(2500);
             } catch (Exception e1) {
-              e1.printStackTrace();
+                e1.printStackTrace();
             }
         }
     }
@@ -383,16 +380,12 @@ public class Drive implements ActionListener {
         try {
             System.gc();
             Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-                    throws IOException {
+                @Override public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     Files.delete(file);
                     return FileVisitResult.CONTINUE;
                 }
 
-                @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc)
-                    throws IOException {
+                @Override public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
                     if (exc == null) {
                         Files.delete(dir);
                         return FileVisitResult.CONTINUE;
