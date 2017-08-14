@@ -4,6 +4,7 @@
 
 package info.spotcomms.extirpater;
 
+import javax.crypto.Cipher;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
@@ -19,23 +20,25 @@ import java.util.prefs.Preferences;
  */
 public class GUI extends JFrame {
 
-    public boolean isAdmin;
-    public String os;
+    protected boolean isAdmin = false;
+    private boolean unlimitedStrength = false;
+    protected String os;
     private ArrayList<Drive> drives = new ArrayList<Drive>();
     private int amtDrives = 0;
-    public JComboBox drpPasses =
+    protected JComboBox drpPasses =
         new JComboBox(new String[] {"Don't Erase Free Space", "1 Pass, 0", "1 Pass, Random", "2 Passes, 0/1",
             "3 Passes, 0/1/Random"});
-    public Checkbox chkEmptyTrash = new Checkbox("Empty Trash", true);
-    public JComboBox drpFillFileTable = new JComboBox(
+    protected Checkbox chkEmptyTrash = new Checkbox("Empty Trash", true);
+    protected JComboBox drpFillFileTable = new JComboBox(
         new String[] {"Don't Fill File Table", "Fill File Table, 20,000 Files",
             "Fill File Table, 200,000 Files", "Fill File Table, 2,000,000 Files"});
 
-    public ArrayList<ByteArray> byteArrays = new ArrayList<ByteArray>();
+    protected ArrayList<ByteArray> byteArrays = new ArrayList<ByteArray>();
 
     public GUI() {
         try {
             isAdmin = isAdmin();
+            unlimitedStrength = Cipher.getMaxAllowedKeyLength("AES") != 128;
             os = getOS();
             initDrives();
             amtDrives = drives.size();
@@ -113,7 +116,7 @@ public class GUI extends JFrame {
                     String driveType = fsv.getSystemTypeDescription(drivePath);
                     if (driveType.equals("Local Disk") || driveType.equals("Removable Disk")) {
                         String displayName = drivePath + " (" + fsv.getSystemDisplayName(drivePath).substring(0, fsv.getSystemDisplayName(drivePath).length() - 4) + ")";
-                        drives.add(new Drive(this, drivePath, displayName));
+                        drives.add(new Drive(this, drivePath, displayName, unlimitedStrength));
                     }
                 }
             }
@@ -122,7 +125,7 @@ public class GUI extends JFrame {
                 for (File drivePath : volumes) {
                     if (drivePath.isDirectory()) {
                         String displayName = drivePath + " (" + (drivePath + "").substring(9, (drivePath + "").length()) + ")";
-                        drives.add(new Drive(this, drivePath, displayName));
+                        drives.add(new Drive(this, drivePath, displayName, unlimitedStrength));
                     }
                 }
             }
@@ -166,7 +169,7 @@ public class GUI extends JFrame {
                     if (driveS[5].contains("compress")) {
                         displayName += " [COMPRESSED] ";
                     }
-                    drives.add(new Drive(this, drivePath, displayName));
+                    drives.add(new Drive(this, drivePath, displayName, unlimitedStrength));
                 }
             }
         } catch (Exception e) {

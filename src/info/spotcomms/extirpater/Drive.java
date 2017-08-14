@@ -17,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.util.Random;
 
@@ -46,12 +45,12 @@ public class Drive implements ActionListener {
     private boolean finished = false;
 
     private SeedGenerator seedGenerator = null;
-    private MersenneTwisterRNG random = null;
-    private AESCounterRNG secureRandom = null;
+    private Random random = null;
+    private Random secureRandom = null;
 
     private DecimalFormat df = new DecimalFormat("#.##");
 
-    public Drive(GUI gui, File drivePath, String driveName) {
+    public Drive(GUI gui, File drivePath, String driveName, boolean unlimitedStrength) {
         this.gui = gui;
         this.drivePath = drivePath;
         this.extirpaterPath = new File(this.drivePath + "/Extirpater");
@@ -71,12 +70,13 @@ public class Drive implements ActionListener {
             } else {
                 seedGenerator = new SecureRandomSeedGenerator();
             }
-            random = new MersenneTwisterRNG(seedGenerator.generateSeed(16));
-            try {
+            if(unlimitedStrength) {
+                random = new CMWC4096RNG(seedGenerator.generateSeed(16384));
                 secureRandom = new AESCounterRNG(seedGenerator.generateSeed(32));
-            } catch(Exception e) {
+            } else {
+                System.out.println("Unlimited Strength Encryption is not available on this runtime");
+                random = new MersenneTwisterRNG(seedGenerator.generateSeed(16));
                 secureRandom = new AESCounterRNG(seedGenerator.generateSeed(16));
-                e.printStackTrace();
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -158,8 +158,7 @@ public class Drive implements ActionListener {
         }
     }
 
-    public Thread start(final boolean emptyTrash, final boolean fillFileTable,
-        final int amtFillFileTable, final int passes) {
+    private Thread start(final boolean emptyTrash, final boolean fillFileTable, final int amtFillFileTable, final int passes) {
         return new Thread(new Runnable() {
             @Override
             public void run() {
@@ -226,11 +225,10 @@ public class Drive implements ActionListener {
                 }
             }
             if (gui.os.equals("Mac")) {
-                new ProcessBuilder("rm", "-rf", "~/.Trash/*").start();
+                new ProcessBuilder("rm", "-rf", "~/.Trash").start();
             }
             if (gui.os.equals("Linux")) {
-                new ProcessBuilder("rm", "-rf", "~/.Trash/*").start();
-                new ProcessBuilder("rm", "-rf", "~/.local/share/Trash/files/*").start();
+                new ProcessBuilder("rm", "-rf", "~/.local/share/Trash").start();
             }
             lblStatus.setText("Emptied Trash");
             Thread.sleep(2500);
@@ -340,7 +338,7 @@ public class Drive implements ActionListener {
         }
     }
 
-    public void deleteTempFiles() {
+    private void deleteTempFiles() {
         try {
             System.gc();
             lblStatus.setText("Cleaning Up");
