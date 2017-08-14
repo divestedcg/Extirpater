@@ -21,18 +21,17 @@ import java.util.prefs.Preferences;
  * Date: 8/12/2014
  * Time: 2:24 AM
  */
-public class GUI extends JFrame {
+class GUI extends JFrame {
 
-    protected boolean isAdmin = false;
+    boolean isAdmin = false;
     private boolean unlimitedStrength = false;
-    protected String os;
-    private ArrayList<Drive> drives = new ArrayList<Drive>();
-    private int amtDrives = 0;
-    protected JComboBox drpPasses = new JComboBox(new String[] {"Don't Erase Free Space", "1 Pass, 0", "1 Pass, Random", "2 Passes, 0/1", "3 Passes, 0/1/Random"});
-    protected Checkbox chkEmptyTrash = new Checkbox("Empty Trash", true);
-    protected JComboBox drpFillFileTable = new JComboBox(new String[] {"Don't Fill File Table", "Fill File Table, 20,000 Files", "Fill File Table, 200,000 Files", "Fill File Table, 2,000,000 Files"});
+    String os;
+    private final ArrayList<Drive> drives = new ArrayList<>();
+    final JComboBox drpPasses = new JComboBox(new String[] {"Don't Erase Free Space", "1 Pass, 0", "1 Pass, Random", "2 Passes, 0/1", "3 Passes, 0/1/Random"});
+    final Checkbox chkEmptyTrash = new Checkbox("Empty Trash", true);
+    final JComboBox drpFillFileTable = new JComboBox(new String[] {"Don't Fill File Table", "Fill File Table, 20,000 Files", "Fill File Table, 200,000 Files", "Fill File Table, 2,000,000 Files"});
 
-    protected ArrayList<ByteArray> byteArrays = new ArrayList<ByteArray>();
+    final ArrayList<ByteArray> byteArrays = new ArrayList<>();
 
     public GUI() {
         try {
@@ -40,7 +39,7 @@ public class GUI extends JFrame {
             unlimitedStrength = Cipher.getMaxAllowedKeyLength("AES") != 128;
             os = getOS();
             initDrives();
-            amtDrives = drives.size();
+            int amtDrives = drives.size();
             setTitle("Extirpater");
             setLocation(50, 50);
             setSize(850, (amtDrives * 35) + 20);
@@ -132,7 +131,7 @@ public class GUI extends JFrame {
             if (os.equals("Linux")) {
                 Process getDrives = new ProcessBuilder("mount", "-l").start();
                 Scanner s = new Scanner(getDrives.getInputStream());
-                ArrayList<String> drivesTemp = new ArrayList<String>();
+                ArrayList<String> drivesTemp = new ArrayList<>();
                 while (s.hasNextLine()) {
                     String drive = s.nextLine();
                     if (drive.startsWith("/dev/sd") || drive.startsWith("/dev/vd") || drive.startsWith("/dev/mmcblk") || drive.startsWith("/dev/mapper/")) {

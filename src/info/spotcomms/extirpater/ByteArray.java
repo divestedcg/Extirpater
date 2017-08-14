@@ -10,11 +10,11 @@ package info.spotcomms.extirpater;
  * Date: 9/1/2014
  * Time; 9:07 PM
  */
-public class ByteArray {
+class ByteArray {
 
-    private byte value;
-    private int length;
-    private byte[] byteArray;
+    private final byte value;
+    private final int length;
+    private final byte[] byteArray;
 
     public ByteArray(GUI gui, byte value, int length) {
         this.value = value;

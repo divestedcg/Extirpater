@@ -26,45 +26,43 @@ import java.util.Random;
  * Date: 8/14/2014
  * Time: 4:24 AM
  */
-public class Drive implements ActionListener {
+class Drive implements ActionListener {
 
-    private GUI gui;
-    private File drivePath;
-    private File extirpaterPath;
-    private String driveName;
-    private JLabel lblDriveName;
-    private JButton btnControl;
-    private JLabel lblStatus;
+    private final GUI gui;
+    private final File drivePath;
+    private final File extirpaterPath;
+    private final JLabel lblDriveName;
+    private final JButton btnControl;
+    private final JLabel lblStatus;
 
-    private long freeSpace;
+    private final long freeSpace;
 
-    private static int kilobyte = 1000;
-    private static int megabyte = 1000000;
+    private static final int kilobyte = 1000;
+    private static final int megabyte = 1000000;
 
     private boolean running = false;
     private boolean finished = false;
 
-    private SeedGenerator seedGenerator = null;
     private Random random = null;
     private Random secureRandom = null;
 
-    private DecimalFormat df = new DecimalFormat("#.##");
+    private final DecimalFormat df = new DecimalFormat("#.##");
 
     public Drive(GUI gui, File drivePath, String driveName, boolean unlimitedStrength) {
         this.gui = gui;
         this.drivePath = drivePath;
         this.extirpaterPath = new File(this.drivePath + "/Extirpater");
-        this.driveName = driveName;
-        if (this.driveName.equals("")) {
+        if (driveName.equals("")) {
             this.lblDriveName = new JLabel(this.drivePath + "", JLabel.CENTER);
         } else {
-            this.lblDriveName = new JLabel(this.driveName, JLabel.CENTER);
+            this.lblDriveName = new JLabel(driveName, JLabel.CENTER);
         }
         this.freeSpace = (drivePath.getFreeSpace() / megabyte);
         this.btnControl = new JButton("Start");
         this.btnControl.addActionListener(this);
         this.lblStatus = new JLabel("Idle", JLabel.CENTER);
         try {
+            SeedGenerator seedGenerator = null;
             if (gui.os.equals("Linux") || gui.os.equals("Mac")) {
                 seedGenerator = new DevRandomSeedGenerator();
             } else {
@@ -102,54 +100,47 @@ public class Drive implements ActionListener {
                 btnControl.setText("Stopping");
                 btnControl.setEnabled(false);
             } else {
-                new Thread(new Runnable() {
-                    @Override public void run() {
-                        try {
-                            running = true;
-                            finished = false;
-                            btnControl.setText("Stop");
-                            extirpaterPath.mkdir();
-                            boolean fillFileTable = (gui.drpFillFileTable.getSelectedIndex() >= 1);
-                            int amtFillFileTable = 0;
-                            if (fillFileTable) {
-                                switch (gui.drpFillFileTable.getSelectedIndex()) {
-                                    case 0:
-                                        amtFillFileTable = 0;
-                                        break;
-                                    case 1:
-                                        amtFillFileTable = 10000;
-                                        break;
-                                    case 2:
-                                        amtFillFileTable = 100000;
-                                        break;
-                                    case 3:
-                                        amtFillFileTable = 1000000;
-                                        break;
-                                }
+                new Thread(() -> {
+                    try {
+                        running = true;
+                        finished = false;
+                        btnControl.setText("Stop");
+                        extirpaterPath.mkdir();
+                        boolean fillFileTable = (gui.drpFillFileTable.getSelectedIndex() >= 1);
+                        int amtFillFileTable = 0;
+                        if (fillFileTable) {
+                            switch (gui.drpFillFileTable.getSelectedIndex()) {
+                                case 0:
+                                    amtFillFileTable = 0;
+                                    break;
+                                case 1:
+                                    amtFillFileTable = 10000;
+                                    break;
+                                case 2:
+                                    amtFillFileTable = 100000;
+                                    break;
+                                case 3:
+                                    amtFillFileTable = 1000000;
+                                    break;
                             }
-                            boolean emptyTrash = false;
-                            if (!gui.isAdmin) {
-                                emptyTrash = false;
-                            } else {
-                                emptyTrash = gui.chkEmptyTrash.getState();
-                            }
-                            Thread mainThread = start(emptyTrash, fillFileTable, amtFillFileTable, gui.drpPasses.getSelectedIndex());
-                            mainThread.start();
-                            while (running) {
-                                //Do nothing
-                                Thread.sleep(1000);
-                            }
-                            if (!finished) {
-                                mainThread.stop();
-                                deleteTempFiles();
-                                lblStatus.setText("Stopped");
-                            }
-                            deleteDirectory(extirpaterPath.toPath());
-                            btnControl.setText("Start");
-                            btnControl.setEnabled(true);
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
+                        boolean emptyTrash = gui.isAdmin && gui.chkEmptyTrash.getState();
+                        Thread mainThread = start(emptyTrash, fillFileTable, amtFillFileTable, gui.drpPasses.getSelectedIndex());
+                        mainThread.start();
+                        while (running) {
+                            //Do nothing
+                            Thread.sleep(1000);
+                        }
+                        if (!finished) {
+                            mainThread.stop();
+                            deleteTempFiles();
+                            lblStatus.setText("Stopped");
+                        }
+                        deleteDirectory(extirpaterPath.toPath());
+                        btnControl.setText("Start");
+                        btnControl.setEnabled(true);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
                     }
                 }).start();
             }
@@ -157,56 +148,54 @@ public class Drive implements ActionListener {
     }
 
     private Thread start(final boolean emptyTrash, final boolean fillFileTable, final int amtFillFileTable, final int passes) {
-        return new Thread(new Runnable() {
-            @Override public void run() {
-                try {
-                    lblStatus.setText("Starting...");
-                    Thread.sleep(2500);
-                    if (emptyTrash) {
-                        emptyTrash();
-                    }
-                    if (fillFileTable) {
-                        fillFileTable(amtFillFileTable, 1);
-                        deleteTempFiles();
-                    }
-                    switch (passes) {
-                        case 0:
-                            break;
-                        case 1:
-                            eraseFreeSpace((byte) 0x00, 1);
-                            deleteTempFiles();
-                            break;
-                        case 2:
-                            eraseFreeSpace((byte) 0x42, 1);
-                            deleteTempFiles();
-                            break;
-                        case 3:
-                            eraseFreeSpace((byte) 0x00, 1);
-                            deleteTempFiles();
-                            eraseFreeSpace((byte) 0xFF, 2);
-                            deleteTempFiles();
-                            break;
-                        case 4:
-                            eraseFreeSpace((byte) 0x00, 1);
-                            deleteTempFiles();
-                            eraseFreeSpace((byte) 0xFF, 2);
-                            deleteTempFiles();
-                            eraseFreeSpace((byte) 0x42, 3);
-                            deleteTempFiles();
-                            break;
-
-                    }
-                    if (fillFileTable) {
-                        fillFileTable(amtFillFileTable, 2);
-                        deleteTempFiles();
-                    }
-                    deleteTempFiles();
-                    running = false;
-                    finished = true;
-                    lblStatus.setText("Finished!");
-                } catch (Exception e) {
-                    e.printStackTrace();
+        return new Thread(() -> {
+            try {
+                lblStatus.setText("Starting...");
+                Thread.sleep(2500);
+                if (emptyTrash) {
+                    emptyTrash();
                 }
+                if (fillFileTable) {
+                    fillFileTable(amtFillFileTable, 1);
+                    deleteTempFiles();
+                }
+                switch (passes) {
+                    case 0:
+                        break;
+                    case 1:
+                        eraseFreeSpace((byte) 0x00, 1);
+                        deleteTempFiles();
+                        break;
+                    case 2:
+                        eraseFreeSpace((byte) 0x42, 1);
+                        deleteTempFiles();
+                        break;
+                    case 3:
+                        eraseFreeSpace((byte) 0x00, 1);
+                        deleteTempFiles();
+                        eraseFreeSpace((byte) 0xFF, 2);
+                        deleteTempFiles();
+                        break;
+                    case 4:
+                        eraseFreeSpace((byte) 0x00, 1);
+                        deleteTempFiles();
+                        eraseFreeSpace((byte) 0xFF, 2);
+                        deleteTempFiles();
+                        eraseFreeSpace((byte) 0x42, 3);
+                        deleteTempFiles();
+                        break;
+
+                }
+                if (fillFileTable) {
+                    fillFileTable(amtFillFileTable, 2);
+                    deleteTempFiles();
+                }
+                deleteTempFiles();
+                running = false;
+                finished = true;
+                lblStatus.setText("Finished!");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
@@ -244,7 +233,7 @@ public class Drive implements ActionListener {
         try {
             lblStatus.setText("Filling File Table, Pass " + pass + " of 2");
             for (int x = 0; x < amtFiles; x++) {
-                File f = new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(5));
+                File f = new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(8));
                 f.createNewFile();
                 lblStatus.setText("Filling File Table, Pass " + pass + " of 2, File: " + x);
             }
@@ -264,7 +253,7 @@ public class Drive implements ActionListener {
     private void eraseFreeSpace(byte value, int pass) {
         try {
             try {
-                double progress = 0;
+                double progress;
                 lblStatus.setText("Erasing, Pass: " + pass + ", Value: " + value);
                 File tempFile = new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(5));
                 tempFile.createNewFile();
@@ -361,12 +350,12 @@ public class Drive implements ActionListener {
 
     private String getRandomString(int length) {
         String base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        String temp = "";
+        StringBuilder temp = new StringBuilder();
         for (int i = 0; i < length; i++) {
             int rn = random.nextInt(base.length());
-            temp = temp + base.substring(rn, rn + 1);
+            temp.append(base.substring(rn, rn + 1));
         }
-        return temp;
+        return temp.toString();
     }
 
     private byte[] getRandomByteArray(int length) {
