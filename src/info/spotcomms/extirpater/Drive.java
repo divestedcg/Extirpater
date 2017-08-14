@@ -288,7 +288,7 @@ public class Drive implements ActionListener {
                     }
                     while (drivePath.getFreeSpace() / megabyte >= 25) {
                         fos.write(twentyfiveMegabyteArray);
-                        progress = 100.0 - ((((double) (drivePath.getFreeSpace() / megabyte)) / freeSpace) * ((double) (100.0)));
+                        progress = 100.0 - ((((double) (drivePath.getFreeSpace() / megabyte)) / freeSpace) * 100.0);
                         lblStatus.setText("Erasing, Pass: " + pass + ", Value: " + value + ", Progress: " + df.format(progress) + "%");
                     }
                     while (drivePath.getFreeSpace() / megabyte >= 1) {
@@ -304,7 +304,7 @@ public class Drive implements ActionListener {
                     lblStatus.setText("Erasing, Pass: " + pass + ", Value: Random");
                     while (drivePath.getFreeSpace() / megabyte >= 25) {
                         fos.write(getRandomByteArray(megabyte * 25));
-                        progress = 100.0 - ((((double) (drivePath.getFreeSpace() / megabyte)) / freeSpace) * ((double) (100.0)));
+                        progress = 100.0 - ((((double) (drivePath.getFreeSpace() / megabyte)) / freeSpace) * 100.0);
                         lblStatus.setText("Erasing, Pass: " + pass + ", Value: Random" + ", Progress: " + df.format(progress) + "%");
                     }
                     while (drivePath.getFreeSpace() / megabyte >= 1) {
