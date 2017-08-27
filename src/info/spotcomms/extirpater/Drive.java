@@ -43,8 +43,7 @@ class Drive implements ActionListener {
     private boolean running = false;
     private boolean finished = false;
 
-    private Random random = null;
-    private Random secureRandom = null;
+    private AESCounterRNG secureRandom = null;
 
     private final DecimalFormat df = new DecimalFormat("#.##");
 
@@ -62,18 +61,16 @@ class Drive implements ActionListener {
         this.btnControl.addActionListener(this);
         this.lblStatus = new JLabel("Idle", JLabel.CENTER);
         try {
-            SeedGenerator seedGenerator = null;
+            SeedGenerator seedGenerator;
             if (gui.os.equals("Linux") || gui.os.equals("Mac")) {
                 seedGenerator = new DevRandomSeedGenerator();
             } else {
                 seedGenerator = new SecureRandomSeedGenerator();
             }
             if (unlimitedStrength) {
-                random = new CMWC4096RNG(seedGenerator.generateSeed(16384));
                 secureRandom = new AESCounterRNG(seedGenerator.generateSeed(32));
             } else {
                 System.out.println("Unlimited Strength Encryption is not available on this runtime");
-                random = new MersenneTwisterRNG(seedGenerator.generateSeed(16));
                 secureRandom = new AESCounterRNG(seedGenerator.generateSeed(16));
             }
         } catch (Exception e) {
@@ -255,7 +252,7 @@ class Drive implements ActionListener {
             try {
                 double progress;
                 lblStatus.setText("Erasing, Pass: " + pass + ", Value: " + value);
-                File tempFile = new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(5));
+                File tempFile = new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(8));
                 tempFile.createNewFile();
                 FileOutputStream fos = new FileOutputStream(tempFile);
                 if (value != 0x42) {
@@ -352,7 +349,7 @@ class Drive implements ActionListener {
         String base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder temp = new StringBuilder();
         for (int i = 0; i < length; i++) {
-            int rn = random.nextInt(base.length());
+            int rn = secureRandom.nextInt(base.length());
             temp.append(base.substring(rn, rn + 1));
         }
         return temp.toString();
