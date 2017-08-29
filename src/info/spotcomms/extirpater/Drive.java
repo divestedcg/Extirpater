@@ -18,7 +18,6 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DecimalFormat;
-import java.util.Random;
 
 /**
  * Created using IntelliJ IDEA
@@ -230,7 +229,7 @@ class Drive implements ActionListener {
         try {
             lblStatus.setText("Filling File Table, Pass " + pass + " of 2");
             for (int x = 0; x < amtFiles; x++) {
-                File f = new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(8));
+                File f = new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString());
                 f.createNewFile();
                 lblStatus.setText("Filling File Table, Pass " + pass + " of 2, File: " + x);
             }
@@ -252,7 +251,7 @@ class Drive implements ActionListener {
             try {
                 double progress;
                 lblStatus.setText("Erasing, Pass: " + pass + ", Value: " + value);
-                File tempFile = new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString(8));
+                File tempFile = new File(extirpaterPath + "/Extirpater_Temp-" + getRandomString());
                 tempFile.createNewFile();
                 FileOutputStream fos = new FileOutputStream(tempFile);
                 if (value != 0x42) {
@@ -345,10 +344,10 @@ class Drive implements ActionListener {
         }
     }
 
-    private String getRandomString(int length) {
+    private String getRandomString() {
         String base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder temp = new StringBuilder();
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < 8; i++) {
             int rn = secureRandom.nextInt(base.length());
             temp.append(base.substring(rn, rn + 1));
         }
