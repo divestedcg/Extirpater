@@ -156,6 +156,15 @@ class GUI extends JFrame {
                 for (String drive : drivesTemp) {
                     String[] driveS = drive.split(" ");
                     File drivePath = new File(driveS[2]);
+                    if(driveS[2].equals("/home")) {
+                        drivePath = new File(System.getProperty("user.home"));
+                    }
+                    if(driveS[2].equals("/")) {
+                        File tmpDir = new File("/var/tmp");
+                        if(tmpDir.getFreeSpace() == drivePath.getFreeSpace()) {
+                            drivePath = tmpDir;
+                        }
+                    }
                     String driveId = driveS[0].split("/dev/")[1];
                     String ssd = "";
                     if (driveId.startsWith("sd") || driveId.startsWith("vd")) {
@@ -179,6 +188,9 @@ class GUI extends JFrame {
                     }
                     if (driveS[5].contains("compress")) {
                         displayName += " [COMPRESSED] ";
+                    }
+                    if(!drivePath.canWrite()) {
+                        displayName += " [UNWRITABLE]";
                     }
                     drives.add(new Drive(this, drivePath, displayName, unlimitedStrength));
                 }
