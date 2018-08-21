@@ -36,6 +36,7 @@ import java.util.prefs.Preferences;
  */
 class GUI extends JFrame {
 
+    private static final String version = "2.9";
     boolean isAdmin = false;
     private boolean unlimitedStrength = false;
     String os;
@@ -53,7 +54,7 @@ class GUI extends JFrame {
             os = getOS();
             initDrives();
             int amtDrives = drives.size();
-            setTitle("Extirpater");
+            setTitle("Extirpater " + version);
             setLocation(50, 50);
             setSize(850, (amtDrives * 35) + 20);
             JPanel panel = new JPanel();
@@ -95,7 +96,7 @@ class GUI extends JFrame {
             prefs.flush(); //BackingStoreException on Linux
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return false;
         }
     }
@@ -157,7 +158,10 @@ class GUI extends JFrame {
                     String[] driveS = drive.split(" ");
                     File drivePath = new File(driveS[2]);
                     if(driveS[2].equals("/home")) {
-                        drivePath = new File(System.getProperty("user.home"));
+                        File tmpDir = new File(System.getProperty("user.home"));
+                        if(tmpDir.getFreeSpace() == drivePath.getFreeSpace()) {
+                            drivePath = tmpDir;
+                        }
                     }
                     if(driveS[2].equals("/")) {
                         File tmpDir = new File("/var/tmp");
