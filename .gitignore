@@ -1,4 +1,6 @@
 packaging/builds/
+packaging/flatpak/build-dir
+packaging/flatpak/.flatpak-builder
 bin
 .settings
 .classpath

@@ -1,0 +1,10 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Exec=us.spotco.Extirpater.sh
+Icon=us.spotco.Extirpater
+Categories=Utility;
+Name=Extirpater
+Comment=A multiplatform Java based free space eraser

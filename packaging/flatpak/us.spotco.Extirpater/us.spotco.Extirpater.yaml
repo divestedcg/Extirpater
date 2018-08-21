@@ -1,0 +1,35 @@
+app-id: us.spotco.Extirpater
+runtime: org.freedesktop.Platform
+runtime-version: 1.6
+sdk: org.freedesktop.Sdk
+command: us.spotco.Extirpater.sh
+sdk-extensions:
+- org.freedesktop.Sdk.Extension.openjdk10
+finish-args:
+- --filesystem=host
+- --socket=wayland
+- --socket=x11
+- --share=ipc
+- --env=PATH=/usr/bin:/app/bin:/app/jre/bin
+- --persist=.extirpater
+modules:
+- name: openjdk
+  buildsystem: simple
+  build-commands:
+    - /usr/lib/sdk/openjdk10/install.sh
+
+- name: Extirpater
+  buildsystem: simple
+  build-commands:
+  - echo "java -jar /app/share/us.spotco.Extirpater/us.spotco.Extirpater.jar" > us.spotco.Extirpater.sh
+  - install -Dm755 us.spotco.Extirpater.sh /app/bin/us.spotco.Extirpater.sh
+  - install -Dm644 us.spotco.Extirpater.jar /app/share/us.spotco.Extirpater/us.spotco.Extirpater.jar
+  - install -Dm644 us.spotco.Extirpater.desktop /app/share/applications/us.spotco.Extirpater.desktop
+  - install -Dm644 us.spotco.Extirpater.png /app/share/icons/hicolor/48x48/apps/us.spotco.Extirpater.png
+  sources:
+  - type: file
+    path: us.spotco.Extirpater.jar
+  - type: file
+    path: us.spotco.Extirpater.desktop
+  - type: file
+    path: us.spotco.Extirpater.png
