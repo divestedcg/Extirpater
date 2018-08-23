@@ -36,7 +36,7 @@ import java.util.prefs.Preferences;
  */
 class GUI extends JFrame {
 
-    private static final String version = "2.9";
+    private static final String version = "2.9.1";
     boolean isAdmin = false;
     private boolean unlimitedStrength = false;
     String os;
@@ -148,6 +148,9 @@ class GUI extends JFrame {
                 ArrayList<String> drivesTemp = new ArrayList<>();
                 while (s.hasNextLine()) {
                     String drive = s.nextLine();
+                    if(drive.contains("tmpfs") || drive.contains("run on") || drive.contains("/etc/")) {
+                        continue;
+                    }
                     if (drive.startsWith("/dev/sd") || drive.startsWith("/dev/vd") || drive.startsWith("/dev/mmcblk") || drive.startsWith("/dev/mapper/")) {
                         drivesTemp.add(drive);
                     }
@@ -168,6 +171,9 @@ class GUI extends JFrame {
                         if(tmpDir.getFreeSpace() == drivePath.getFreeSpace()) {
                             drivePath = tmpDir;
                         }
+                    }
+                    if(!drivePath.isDirectory() || !drivePath.canWrite()) {
+                        continue;
                     }
                     String driveId = driveS[0].split("/dev/")[1];
                     String ssd = "";
@@ -192,9 +198,6 @@ class GUI extends JFrame {
                     }
                     if (driveS[5].contains("compress")) {
                         displayName += " [COMPRESSED] ";
-                    }
-                    if(!drivePath.canWrite()) {
-                        displayName += " [UNWRITABLE]";
                     }
                     drives.add(new Drive(this, drivePath, displayName, unlimitedStrength));
                 }
