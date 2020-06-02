@@ -2,8 +2,8 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>/home/spotcomms/Development/Java/Eclipse_Workspace/Extirpater/packaging/builds/2.7/extirpater-v2.7-1-any.jar</jar>
-  <outfile>/home/spotcomms/Development/Java/Eclipse_Workspace/Extirpater/packaging/builds/2.7/extirpater-v2.7-1-any.exe</outfile>
+  <jar>/mnt/Drive-1/Development/Java/Eclipse_Workspace/Extirpater/packaging/builds/2.7/extirpater-v2.7-1-any.jar</jar>
+  <outfile>/mnt/Drive-1/Development/Java/Eclipse_Workspace/Extirpater/packaging/builds/2.7/extirpater-v2.7-1-any.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -13,7 +13,7 @@
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon>/home/spotcomms/Development/Java/Eclipse_Workspace/Extirpater/packaging/launch4j/extirpater.ico</icon>
+  <icon>/mnt/Drive-1/Development/Java/Eclipse_Workspace/Extirpater/packaging/launch4j/extirpater.ico</icon>
   <jre>
     <path></path>
     <bundledJre64Bit>false</bundledJre64Bit>
