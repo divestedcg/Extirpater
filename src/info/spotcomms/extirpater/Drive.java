@@ -369,7 +369,7 @@ class Drive implements ActionListener {
         return bytes;
     }
 
-    //Credit: http://fahdshariff.blogspot.ru/2011/08/java-7-deleting-directory-by-walking.html
+    //Credit (GPLv3): https://fahdshariff.blogspot.com/2011/08/java-7-deleting-directory-by-walking.html
     private void deleteDirectory(Path dir) {
         try {
             System.gc();

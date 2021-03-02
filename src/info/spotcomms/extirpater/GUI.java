@@ -87,7 +87,7 @@ class GUI extends JFrame {
         }
     }
 
-    //Credits: http://stackoverflow.com/a/23538961
+    //Credit (CC BY-SA 3.0): https://stackoverflow.com/a/23538961
     private boolean isAdmin() {
         try {
             Preferences prefs = Preferences.systemRoot();
@@ -121,7 +121,7 @@ class GUI extends JFrame {
 
     private void initDrives() {
         try {
-            //Credits: http://stackoverflow.com/a/15608620
+            //Credit (CC BY-SA 3.0): https://stackoverflow.com/a/15608620
             if (os.equals("Windows")) {
                 FileSystemView fsv = FileSystemView.getFileSystemView();
                 for (File drivePath : File.listRoots()) {

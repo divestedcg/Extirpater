@@ -45,9 +45,9 @@ Reasons for Creation || Issues with Similar Programs
 Credits
 -------
 - Joe aka Dr_fantasmo
-- Icon: http://ic8.link/11637
-- http://maths.uncommons.org
-- http://en.wikipedia.org/wiki/Data_erasure
-- http://stackoverflow.com/a/23538961
-- http://stackoverflow.com/a/15608620
-- http://fahdshariff.blogspot.ru/2011/08/java-7-deleting-directory-by-walking.html
+- Icon: https://icons8.com/icon/11637/erase
+- Uncommons Maths, License: Apache 2.0, https://maths.uncommons.org
+- (CC BY-SA 3.0) https://en.wikipedia.org/wiki/Data_erasure
+- (CC BY-SA 3.0) https://stackoverflow.com/a/23538961
+- (CC BY-SA 3.0) https://stackoverflow.com/a/15608620
+- (GPLv3) https://fahdshariff.blogspot.com/2011/08/java-7-deleting-directory-by-walking.html
