@@ -45,7 +45,7 @@ Reasons for Creation || Issues with Similar Programs
 Credits
 -------
 - Joe aka Dr_fantasmo
-- Icon: https://icons8.com/icon/11637/erase
+- Icons (Apache-2.0): Google/Android/AOSP
 - Uncommons Maths, License: Apache 2.0, https://maths.uncommons.org
 - (CC BY-SA 3.0) https://en.wikipedia.org/wiki/Data_erasure
 - (CC BY-SA 3.0) https://stackoverflow.com/a/23538961
