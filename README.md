@@ -45,9 +45,13 @@ Reasons for Creation || Issues with Similar Programs
 Credits
 -------
 - Joe aka Dr_fantasmo
-- Icons (Apache-2.0): Google/Android/AOSP
+- Icon: Google/Android/AOSP, License: Apache 2.0, https://google.github.io/material-design-icons/
 - Uncommons Maths, License: Apache 2.0, https://maths.uncommons.org
 - (CC BY-SA 3.0) https://en.wikipedia.org/wiki/Data_erasure
 - (CC BY-SA 3.0) https://stackoverflow.com/a/23538961
 - (CC BY-SA 3.0) https://stackoverflow.com/a/15608620
 - (GPLv3) https://fahdshariff.blogspot.com/2011/08/java-7-deleting-directory-by-walking.html
+
+Donate
+-------
+BTC: bc1qkjtp2k7cc4kuv8k9wjdlxkeuqczenrpv5mwasl
