@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation ('org.uncommons.maths:uncommons-maths:1.2.2') {
+        exclude group: 'jfree'
+    }
+}
+
+sourceSets {
+    main {
+         java {
+            srcDirs = ['src']
+         }
+    }
+}
+
+jar {
+    manifest {
+        attributes("Main-Class": "info.spotcomms.extirpater.Start")
+    }
+    from {
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+def commit = "git rev-parse --short HEAD".execute().text.trim()
+def commitDate = "git show -s --format=%cs ".concat(commit).execute().text.trim()
+version = '2.9.1_' + commitDate + '_' + commit
