@@ -1,6 +1,33 @@
 Extirpater
 ==========
 
+What is free space erasing?
+---------------------------
+- Typically when you delete a file it is not really deleted, it is merely removed from the file system's index.
+- A free space eraser tool such as this one fills the remaining space of your drive with random noise files and then deletes them.
+- This process makes deleted files for the most part irrecoverable.
+
+What is file table filling?
+---------------------------
+- On some file systems, deleted file names can still be accessible in backup index databases.
+- By creating many tens or hundreds of thousands of empty files with different random names you can push out the old files.
+- This process makes deleted file names for the most part irrecoverable.
+
+Important Things #1
+-------------------
+- Drives over their life span slowly fail, and the internal controller will mark those spaces to no longer be used.
+- These parts of the drive are inaccessible to the operating system.
+- ATA Secure Erase can in theory erase these, but it is unknown how effective such process is.
+- Physical destruction is the only fool-proof method to ensure erasure in such a failure mode.
+- Full disk encryption is also a good protective measure for case of drive failure, among other things.
+
+Important Things #2
+-------------------
+- Solid State Drives are quirky.
+- You cannot secure erase a single file using a traditional file eraser.
+- You can however in theory, if you trust your drive firmware, send an ATA discard to the files location and it should hopefully be "zeroed".
+- You can set your file system to automatically do this for deleted files by setting the `discard` mount flag in your /etc/fstab.
+
 Requirements
 ------------
 - Java 8.0 x64
