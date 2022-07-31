@@ -34,6 +34,10 @@ Requirements
 - Windows, Mac, or a common Linux distro
 - 256MB when using .exe, when using .jar about 100MB + 25MB per drive or 125MB if filling file table
 
+Prebuilts
+---------
+- via CI: https://gitlab.com/divested/extirpater/-/jobs/artifacts/master/browse?job=build
+
 Instructions
 ------------
 0. (Optional) Run BleachBit on Linux/Windows and OnyX on Mac to delete unnecessary files
