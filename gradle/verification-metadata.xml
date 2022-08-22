@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<verification-metadata xmlns="https://schema.gradle.org/dependency-verification" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://schema.gradle.org/dependency-verification https://schema.gradle.org/dependency-verification/dependency-verification-1.1.xsd">
+   <configuration>
+      <verify-metadata>true</verify-metadata>
+      <verify-signatures>true</verify-signatures>
+      <key-servers>
+         <key-server uri="hkps://keys.openpgp.org"/>
+      </key-servers>
+      <trusted-keys>
+         <trusted-key id="6bdaca2c0493cca133b372d09c4f7e9d98b1cc53" group="org.uncommons.maths" name="uncommons-maths" version="1.2.2"/>
+      </trusted-keys>
+   </configuration>
+   <components/>
+</verification-metadata>
